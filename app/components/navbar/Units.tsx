@@ -1,17 +1,14 @@
-import Image from "next/image";
 import React from "react";
+import Image from "next/image";
+import UnitsModal from "@/app/modal/UnitsModal";
 
-const Navbar = () => {
+const Units = () => {
   return (
-    <div className=" my-5 py-4 md:px-6 lg:px-16 xl:px-28 2xl:px-40">
-      {/* logo */}
-      <div className=" flex justify-between items-center">
-        <Image src="/images/logo.svg" width={170} height={170} alt="logo" />
-
-        {/* units */}
+    <div>
+      <div className=" relative">
         <button
           type="button"
-          className=" flex gap-2 items-center cursor-pointer bg-neutral-300/30 py-1 px-3 rounded focus:ring-2 focus:ring-neutral-0 outline-none"
+          className=" flex gap-2 items-center cursor-pointer bg-neutral-700 py-1 px-3 rounded focus:ring-2 focus:ring-neutral-0 outline-none"
         >
           <Image
             src="/images/icon-units.svg"
@@ -27,9 +24,12 @@ const Navbar = () => {
             alt="unit-icon"
           />
         </button>
+        <div className="absolute right-0">
+          <UnitsModal />
+        </div>
       </div>
     </div>
   );
 };
 
-export default Navbar;
+export default Units;
