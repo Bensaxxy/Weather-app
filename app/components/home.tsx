@@ -5,7 +5,7 @@ import AllGrid from "../weatherContainer/AllGrid";
 
 const HomePage = () => {
   return (
-    <div className=" px-3">
+    <div className=" px-3 mb-7">
       {/* navbar component */}
       <Navbar />
       <h1

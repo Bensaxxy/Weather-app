@@ -4,7 +4,7 @@ const WeeksDayModal = () => {
   return (
     <div>
       <div>
-        <div className="bg-neutral-700 p-2 mt-2 w-46 md:w-50 rounded-md z-50 outline-white drop-shadow-md">
+        <div className="bg-neutral-700 p-2 mt-2 w-46 md:w-50 rounded-md z-50 outline-white drop-shadow-md text-left">
           {/* monday */}
           <div className=" cursor-pointer hover:bg-neutral-300/10 py-[5px] px-2 rounded-md shadow-2xl ">
             <h1 className=" text-sm md:text-md">Monday</h1>
