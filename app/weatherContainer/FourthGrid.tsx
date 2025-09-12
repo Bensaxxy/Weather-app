@@ -18,6 +18,20 @@ const FourthGrid = () => {
             />
           </div>
         </div>
+        <div>
+          <div className=" bg-neutral-300/20 rounded-md px-3 py-1 flex justify-between items-center">
+            <span className=" flex items-center gap-1">
+              <Image
+                src="/images/icon-overcast.webp"
+                width={30}
+                height={30}
+                alt="overcast"
+              />
+              3 pm
+            </span>
+            20
+          </div>
+        </div>
       </div>
       <div className="absolute right-3">
         <WeeksDayModal />
