@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./navbar/Navbar";
 import SearchBar from "./SearchBar";
+import AllGrid from "../weatherContainer/AllGrid";
 
 const HomePage = () => {
   return (
@@ -16,6 +17,9 @@ const HomePage = () => {
 
       {/* searchbar */}
       <SearchBar />
+
+      {/* weathers section */}
+      <AllGrid />
     </div>
   );
 };
