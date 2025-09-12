@@ -19,7 +19,9 @@ const HomePage = () => {
       <SearchBar />
 
       {/* weathers section */}
-      <AllGrid />
+      <div className="md:px-6 lg:px-16 xl:px-28 2xl:px-40">
+        <AllGrid />
+      </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 
 const FirstGrid = () => {
-  return <div>FirstGrid</div>;
+  return <div className=" bg">FirstGrid</div>;
 };
 
 export default FirstGrid;
