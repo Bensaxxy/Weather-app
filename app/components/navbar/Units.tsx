@@ -1,12 +1,20 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Image from "next/image";
 import UnitsModal from "@/app/modal/UnitsModal";
 
 const Units = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // I use this to flip the state every time the button is clicked
+  const toggleModal = () => {
+    setIsOpen((prev) => !prev);
+  };
   return (
     <div>
       <div className=" relative">
         <button
+          onClick={toggleModal}
           type="button"
           className=" flex gap-2 items-center cursor-pointer bg-neutral-700 py-1 px-3 rounded focus:ring-2 focus:ring-neutral-0 outline-none"
         >
@@ -24,9 +32,12 @@ const Units = () => {
             alt="unit-icon"
           />
         </button>
-        <div className="absolute right-0">
-          <UnitsModal />
-        </div>
+
+        {isOpen && (
+          <div className="absolute right-0 mt-2 z-50">
+            <UnitsModal />
+          </div>
+        )}
       </div>
     </div>
   );
