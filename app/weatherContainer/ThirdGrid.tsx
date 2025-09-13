@@ -1,152 +1,101 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Image from "next/image";
-import React from "react";
+
+interface DailyForecast {
+  date: string;
+  max: number;
+  min: number;
+  code: number;
+}
+
+const weatherIcons: Record<number, string> = {
+  0: "/images/icon-sunny.webp",
+  1: "/images/icon-partly-cloudy.webp",
+  2: "/images/icon-partly-cloudy.webp",
+  3: "/images/icon-overcast.webp",
+  45: "/images/icon-fog.webp",
+  48: "/images/icon-fog.webp",
+  51: "/images/icon-rain.webp",
+  61: "/images/icon-rain.webp",
+  71: "/images/icon-snow.webp",
+  95: "/images/icon-storm.webp",
+};
 
 const ThirdGrid = () => {
-  return (
-    <div className=" mt-5">
-      <h1>Daily Forecast</h1>
-      <div className=" grid grid-cols-3 md:grid-cols-7 gap-3 md:gap-5 mt-2">
-        {/* 1st week */}
-        <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg">
-          <h1 className=" text-sm font-[500] text-neutral-0">Tue</h1>
-          <Image
-            src="/images/icon-partly-cloudy.webp"
-            width={40}
-            height={40}
-            alt="overcast"
-          />
-          <div className=" flex justify-between items-center w-full">
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>20</p>
-              <sub>°</sub>
-            </span>
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>14</p>
-              <sub>°</sub>
-            </span>
-          </div>
-        </div>
+  const [forecast, setForecast] = useState<DailyForecast[]>([]);
+  const [loading, setLoading] = useState(true);
 
-        {/* 2nd week */}
-        <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg">
-          <h1 className=" text-sm font-[500] text-neutral-0">Wed</h1>
-          <Image
-            src="/images/icon-rain.webp"
-            width={40}
-            height={40}
-            alt="overcast"
-          />
-          <div className=" flex justify-between items-center w-full">
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>21</p>
-              <sub>°</sub>
-            </span>
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>15</p>
-              <sub>°</sub>
-            </span>
-          </div>
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setLoading(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      try {
+        const res = await axios.get("/api/weather", {
+          params: {
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude,
+          },
+        });
+        setForecast(res.data.dailyForecast);
+      } catch (error) {
+        console.error("Failed to fetch forecast:", error);
+      } finally {
+        setLoading(false);
+      }
+    });
+  }, []);
+
+  if (loading)
+    return (
+      <div className="mt-5">
+        <h1 className="font-semibold">Daily Forecast</h1>
+        <div className="grid grid-cols-3 md:grid-cols-7 gap-3 md:gap-5 mt-2">
+          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
+          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
+          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
+          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
+          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
+          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
+          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
         </div>
-        {/* 1st week */}
-        <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg">
-          <h1 className=" text-sm font-[500] text-neutral-0">thu</h1>
-          <Image
-            src="/images/icon-sunny.webp"
-            width={40}
-            height={40}
-            alt="overcast"
-          />
-          <div className=" flex justify-between items-center w-full">
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>20</p>
-              <sub>°</sub>
-            </span>
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>14</p>
-              <sub>°</sub>
-            </span>
-          </div>
-        </div>
-        {/* 1st week */}
-        <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg">
-          <h1 className=" text-sm font-[500] text-neutral-0">fri</h1>
-          <Image
-            src="/images/icon-overcast.webp"
-            width={40}
-            height={40}
-            alt="overcast"
-          />
-          <div className=" flex justify-between items-center w-full">
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>20</p>
-              <sub>°</sub>
-            </span>
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>14</p>
-              <sub>°</sub>
-            </span>
-          </div>
-        </div>
-        {/* 1st week */}
-        <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg">
-          <h1 className=" text-sm font-[500] text-neutral-0">sat</h1>
-          <Image
-            src="/images/icon-storm.webp"
-            width={40}
-            height={40}
-            alt="overcast"
-          />
-          <div className=" flex justify-between items-center w-full">
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>20</p>
-              <sub>°</sub>
-            </span>
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>14</p>
-              <sub>°</sub>
-            </span>
-          </div>
-        </div>
-        {/* 1st week */}
-        <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg">
-          <h1 className=" text-sm font-[500] text-neutral-0">sun</h1>
-          <Image
-            src="/images/icon-snow.webp"
-            width={40}
-            height={40}
-            alt="overcast"
-          />
-          <div className=" flex justify-between items-center w-full">
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>20</p>
-              <sub>°</sub>
-            </span>
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>14</p>
-              <sub>°</sub>
-            </span>
-          </div>
-        </div>
-        {/* 7th week */}
-        <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg">
-          <h1 className=" text-sm font-[500] text-neutral-0">mon</h1>
-          <Image
-            src="/images/icon-fog.webp"
-            width={40}
-            height={40}
-            alt="overcast"
-          />
-          <div className=" flex justify-between items-center w-full">
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>20</p>
-              <sub>°</sub>
-            </span>
-            <span className=" flex text-sm font-[500] text-neutral-200">
-              <p>14</p>
-              <sub>°</sub>
-            </span>
-          </div>
-        </div>
+      </div>
+    );
+  if (!forecast.length) return <p>No forecast available</p>;
+
+  return (
+    <div className="mt-5">
+      <h1 className="font-semibold">Daily Forecast</h1>
+      <div className="grid grid-cols-3 md:grid-cols-7 gap-3 md:gap-5 mt-2">
+        {forecast.map((day, i) => {
+          const icon = weatherIcons[day.code] || "/images/icon-drizzle.webp";
+          const weekday = new Date(day.date).toLocaleDateString("en-US", {
+            weekday: "short",
+          });
+          return (
+            <div
+              key={i}
+              className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg"
+            >
+              <h1 className="text-sm font-[500] text-neutral-0">{weekday}</h1>
+              <Image src={icon} width={40} height={40} alt="weather" />
+              <div className="flex justify-between items-center w-full">
+                <span className="flex text-sm font-[500] text-neutral-200">
+                  <p>{Math.round(day.max)}</p>
+                  <sub>°</sub>
+                </span>
+                <span className="flex text-sm font-[500] text-neutral-200">
+                  <p>{Math.round(day.min)}</p>
+                  <sub>°</sub>
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

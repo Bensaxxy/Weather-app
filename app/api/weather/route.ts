@@ -23,6 +23,8 @@ export async function GET(req: Request) {
           longitude: lon,
           current_weather: true,
           hourly: "apparent_temperature,relativehumidity_2m,precipitation",
+          daily: "temperature_2m_max,temperature_2m_min,weathercode",
+          timezone: "auto",
         },
       }
     );
@@ -77,17 +79,29 @@ export async function GET(req: Request) {
         ? weatherRes.data.hourly.precipitation[currentHourIndex]
         : null;
 
+    // Daily forecast
+    const daily = weatherRes.data.daily;
+
     return NextResponse.json(
       {
         temperature: weatherData.temperature,
         weathercode: weatherData.weathercode,
         windspeed: weatherData.windspeed,
         winddirection: weatherData.winddirection,
+
         feelsLike,
         humidity,
         precipitation,
         city,
         country,
+
+        // daily
+        dailyForecast: daily.time.map((date: string, i: number) => ({
+          date,
+          max: daily.temperature_2m_max[i],
+          min: daily.temperature_2m_min[i],
+          code: daily.weathercode[i],
+        })),
       },
       { status: 200 }
     );
