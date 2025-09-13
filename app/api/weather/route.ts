@@ -7,40 +7,75 @@ export async function GET(req: Request) {
     const lat = searchParams.get("lat");
     const lon = searchParams.get("lon");
 
-    if (!lat || !lon) {
-      return NextResponse.json(
-        { error: "Missing lat/lon params" },
-        { status: 400 }
-      );
-    }
+    // if (!lat || !lon) {
+    //   return NextResponse.json(
+    //     { error: "Missing lat/lon params" },
+    //     { status: 400 }
+    //   );
+    // }
 
     // Weather API
-    const weatherRes = await axios.get("https://api.open-meteo.com/v1/forecast", {
-      params: {
-        latitude: lat,
-        longitude: lon,
-        current_weather: true,  
-      },
-    });
+    const weatherRes = await axios.get(
+      "https://api.open-meteo.com/v1/forecast",
+      {
+        params: {
+          latitude: lat,
+          longitude: lon,
+          current_weather: true,
+          hourly: "apparent_temperature,relativehumidity_2m,precipitation",
+        },
+      }
+    );
 
     const weatherData = weatherRes.data.current_weather;
 
     // Reverse geocoding (must send User-Agent!)
-    const geoRes = await axios.get("https://nominatim.openstreetmap.org/reverse", {
-      params: {
-        lat,
-        lon,
-        format: "json",
-      },
-      headers: {
-        "User-Agent": "my-weather-app/1.0 (contact@example.com)", // required
-      },
-    });
+    const geoRes = await axios.get(
+      "https://nominatim.openstreetmap.org/reverse",
+      {
+        params: {
+          lat,
+          lon,
+          format: "json",
+        },
+        headers: {
+          "User-Agent": "my-weather-app/1.0 (contact@example.com)", // required
+        },
+      }
+    );
 
     const geo = geoRes.data;
     const city =
-      geo.address.city || geo.address.town || geo.address.village ||  geo.address.county || geo.address.state || "Unknown";
+      geo.address.city ||
+      geo.address.town ||
+      geo.address.village ||
+      geo.address.county ||
+      geo.address.state ||
+      "Unknown";
     const country = geo.address.country || "Unknown";
+
+    // Get the current hour in the same format as Open-Meteo
+    const now = new Date();
+    const currentHour = now.toISOString().slice(0, 13) + ":00"; // e.g. 2025-09-12T17:00
+
+    // Find the index in the array
+    const currentHourIndex = weatherRes.data.hourly.time.indexOf(currentHour);
+
+    // Safely extract values if found
+    const feelsLike =
+      currentHourIndex !== -1
+        ? weatherRes.data.hourly.apparent_temperature[currentHourIndex]
+        : null;
+
+    const humidity =
+      currentHourIndex !== -1
+        ? weatherRes.data.hourly.relativehumidity_2m[currentHourIndex]
+        : null;
+
+    const precipitation =
+      currentHourIndex !== -1
+        ? weatherRes.data.hourly.precipitation[currentHourIndex]
+        : null;
 
     return NextResponse.json(
       {
@@ -48,6 +83,9 @@ export async function GET(req: Request) {
         weathercode: weatherData.weathercode,
         windspeed: weatherData.windspeed,
         winddirection: weatherData.winddirection,
+        feelsLike,
+        humidity,
+        precipitation,
         city,
         country,
       },

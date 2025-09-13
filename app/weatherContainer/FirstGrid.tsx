@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
-import axios from "axios";
 
 interface WeatherData {
   temperature: number;
@@ -23,42 +22,22 @@ const weatherIcons: Record<number, string> = {
   95: "/images/icon-storm.webp",
 };
 
-const FirstGrid = () => {
-  const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      console.error("Geolocation not supported");
-      setLoading(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      const lat = pos.coords.latitude;
-      const lon = pos.coords.longitude;
-
-      try {
-        const res = await axios.get("/api/weather", {
-          params: { lat, lon },
-        });
-
-        setWeather(res.data);
-      } catch (err) {
-        console.error("Error fetching weather data:", err);
-      } finally {
-        setLoading(false);
-      }
-    });
-  }, []);
-
+const FirstGrid = ({
+  weather,
+  loading,
+  error,
+}: {
+  weather: WeatherData | null;
+  loading: boolean;
+  error: string | null;
+}) => {
   if (loading) {
     return (
       <div className="overflow-hidden rounded-xl h-[240px] flex flex-col gap-2 items-center justify-center bg-neutral-600 text-sm">
         <Image
           src="/images/icon-loading.svg"
-          width={20}
-          height={20}
+          width={32}
+          height={32}
           alt="loading"
         />
         <p>Loading...</p>
@@ -66,10 +45,10 @@ const FirstGrid = () => {
     );
   }
 
-  if (!weather) {
+  if (error || !weather) {
     return (
       <div className="overflow-hidden rounded-xl h-[240px] flex items-center justify-center bg-neutral-200">
-        <p>Could not fetch weather data</p>
+        <p>{error || "Could not fetch weather data"}</p>
       </div>
     );
   }
