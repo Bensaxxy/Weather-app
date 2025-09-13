@@ -2,7 +2,7 @@ import React from "react";
 
 const SecondGrid = () => {
   return (
-    <div className=" grid grid-cols-2 md:grid-cols-4 gap-5">
+    <div className=" grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
       {/* first */}
       <div className=" bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/80">
         <p className=" font-[300] text-sm md:text-md text-neutral-200">
