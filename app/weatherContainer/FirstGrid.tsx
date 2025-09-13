@@ -54,8 +54,14 @@ const FirstGrid = () => {
 
   if (loading) {
     return (
-      <div className="overflow-hidden rounded-xl h-[240px] flex items-center justify-center bg-neutral-200">
-        <p>Loading weather...</p>
+      <div className="overflow-hidden rounded-xl h-[240px] flex flex-col gap-2 items-center justify-center bg-neutral-600 text-sm">
+        <Image
+          src="/images/icon-loading.svg"
+          width={20}
+          height={20}
+          alt="loading"
+        />
+        <p>Loading...</p>
       </div>
     );
   }
