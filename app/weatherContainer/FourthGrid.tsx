@@ -12,7 +12,7 @@ const FourthGrid = () => {
   };
   return (
     <div className="">
-      <div className=" bg-neutral-700 rounded-md p-3">
+      <div className=" bg-neutral-700 rounded-md p-3 w-full">
         <div className=" flex items-center justify-between mb-2 ">
           <h1>Hourly forecast</h1>
           <button
@@ -28,7 +28,7 @@ const FourthGrid = () => {
               alt="unit-icon"
             />
             {isOpen && (
-              <div className="absolute right-0 top-8">
+              <div className="absolute right-0 top-8 z-20">
                 <WeeksDayModal />
               </div>
             )}
