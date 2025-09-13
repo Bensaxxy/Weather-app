@@ -23,7 +23,8 @@ const FirstGrid = () => {
             />
             <span>
               <h1 className=" text-6xl md:text-8xl font-[700] italic">
-                20 <sup>°</sup>
+                20
+                <sup>°</sup>
               </h1>
             </span>
           </div>
