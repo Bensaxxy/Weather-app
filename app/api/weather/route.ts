@@ -81,6 +81,7 @@ export async function GET(req: Request) {
 
     // Daily forecast
     const daily = weatherRes.data.daily;
+    const hourly = weatherRes.data.hourly;
 
     return NextResponse.json(
       {
@@ -102,6 +103,12 @@ export async function GET(req: Request) {
           min: daily.temperature_2m_min[i],
           code: daily.weathercode[i],
         })),
+
+        hourlyForecast: {
+          time: hourly.time,
+          temperature_2m: hourly.apparent_temperature,
+          weathercode: hourly.weathercode,
+        },
       },
       { status: 200 }
     );
