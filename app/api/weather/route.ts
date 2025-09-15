@@ -7,13 +7,6 @@ export async function GET(req: Request) {
     const lat = searchParams.get("lat");
     const lon = searchParams.get("lon");
 
-    // if (!lat || !lon) {
-    //   return NextResponse.json(
-    //     { error: "Missing lat/lon params" },
-    //     { status: 400 }
-    //   );
-    // }
-
     // Weather API
     const weatherRes = await axios.get(
       "https://api.open-meteo.com/v1/forecast",
@@ -85,6 +78,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(
       {
+        ...weatherRes.data,
         temperature: weatherData.temperature,
         weathercode: weatherData.weathercode,
         windspeed: weatherData.windspeed,
