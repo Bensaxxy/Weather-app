@@ -13,7 +13,7 @@ const weatherIcons: Record<number, string> = {
   51: "/images/icon-rain.webp",
   61: "/images/icon-rain.webp",
   71: "/images/icon-snow.webp",
-  95: "/images/icon-thunderstorm.webp",
+  95: "/images/icon-storm.webp",
 };
 
 const FourthGrid = () => {
