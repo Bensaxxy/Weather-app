@@ -22,35 +22,53 @@ const FourthGrid = () => {
   const [hourly, setHourly] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedDay, setSelectedDay] = useState("Today");
 
   const toggleModal = () => setIsOpen((prev) => !prev);
 
-  useEffect(() => {
-    const fetchWeather = async () => {
-      try {
-        // Example lat/lon (Lagos)
-        const res = await fetch(`/api/weather?lat=6.5244&lon=3.3792`);
-        if (!res.ok) throw new Error("Failed to fetch hourly forecast");
-        const data = await res.json();
+  const fetchWeather = async (day: string = "Today") => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/weather?lat=6.5244&lon=3.3792`);
+      if (!res.ok) throw new Error("Failed to fetch hourly forecast");
+      const data = await res.json();
 
-        // Extract first 8 hours forecast
-        const forecast = data.hourlyForecast.time
-          .slice(0, 8)
-          .map((time: string, i: number) => ({
-            time,
-            temp: data.hourlyForecast.temperature_2m[i],
-            code: data.hourlyForecast.weathercode?.[i] ?? 0,
-          }));
+      // Map days of week to API dates
+      const todayDate = new Date().toISOString().split("T")[0];
+      const daysOfWeek = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
 
-        setHourly(forecast);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      let targetDate = todayDate;
+      if (day !== "Today") {
+        const todayIndex = new Date().getDay();
+        const dayIndex = daysOfWeek.indexOf(day);
+        const diff = (dayIndex - todayIndex + 7) % 7; // days ahead
+        const target = new Date();
+        target.setDate(target.getDate() + diff);
+        targetDate = target.toISOString().split("T")[0];
       }
-    };
 
-    fetchWeather();
+      const forecast = data.hourlyByDay[targetDate] || [];
+
+      setHourly(forecast.slice(0, 8)); // first 8 hours
+      setSelectedDay(day);
+      setIsOpen(false);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWeather("Today");
   }, []);
 
   return (
@@ -63,7 +81,7 @@ const FourthGrid = () => {
             type="button"
             className="bg-neutral-300/20 rounded-sm py-1 px-3 flex items-center gap-2 relative cursor-pointer focus:ring-2 outline-none"
           >
-            <span>Today</span>
+            <span>{selectedDay}</span>
             <Image
               src="/images/icon-dropdown.svg"
               width={14}
@@ -72,19 +90,14 @@ const FourthGrid = () => {
             />
             {isOpen && (
               <div className="absolute right-0 top-8 z-20">
-                <WeeksDayModal />
+                <WeeksDayModal onSelect={fetchWeather} />
               </div>
             )}
           </button>
         </div>
 
         <div>
-          {loading && (
-            <div>
-              <Loading />
-            </div>
-          )}
-
+          {loading && <Loading />}
           {error && <p className="text-red-500">{error}</p>}
           {!loading && !error && hourly.length === 0 && (
             <p>No hourly forecast available</p>
@@ -104,12 +117,7 @@ const FourthGrid = () => {
                   className="bg-neutral-300/20 rounded-md px-3 py-2 flex justify-between items-center mb-[13px]"
                 >
                   <span className="flex items-center gap-1">
-                    <Image
-                      src={icon}
-                      width={30}
-                      height={30}
-                      alt="weather-icon"
-                    />
+                    <Image src={icon} width={30} height={30} alt="wi" />
                     {displayHour} {ampm}
                   </span>
                   <span>

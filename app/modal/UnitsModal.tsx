@@ -1,52 +1,168 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const UnitsModal = () => {
+export interface UnitPreferences {
+  system: "metric" | "imperial";
+  temperature: "celsius" | "fahrenheit";
+  wind: "kmh" | "mph";
+  precipitation: "mm" | "in";
+}
+
+interface UnitsModalProps {
+  onSelect: (units: UnitPreferences) => void;
+  selected: UnitPreferences; // 👈 new prop
+}
+
+const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
+  const [unitSystem, setUnitSystem] = useState<"metric" | "imperial">(
+    selected.system
+  );
+  const [temperature, setTemperature] = useState<"celsius" | "fahrenheit">(
+    selected.temperature
+  );
+  const [wind, setWind] = useState<"kmh" | "mph">(selected.wind);
+  const [precipitation, setPrecipitation] = useState<"mm" | "in">(
+    selected.precipitation
+  );
+
+  // 👇 keep modal in sync if parent updates `selected`
+  useEffect(() => {
+    setUnitSystem(selected.system);
+    setTemperature(selected.temperature);
+    setWind(selected.wind);
+    setPrecipitation(selected.precipitation);
+  }, [selected]);
+
+  const updatePreferences = (updates: Partial<UnitPreferences>) => {
+    let newSystem = unitSystem;
+    let newTemp = temperature;
+    let newWind = wind;
+    let newPrecip = precipitation;
+
+    // Apply updates
+    if (updates.system) {
+      newSystem = updates.system;
+      // auto-switch defaults when system changes
+      if (newSystem === "metric") {
+        newTemp = "celsius";
+        newWind = "kmh";
+        newPrecip = "mm";
+      } else {
+        newTemp = "fahrenheit";
+        newWind = "mph";
+        newPrecip = "in";
+      }
+    }
+    if (updates.temperature) newTemp = updates.temperature;
+    if (updates.wind) newWind = updates.wind;
+    if (updates.precipitation) newPrecip = updates.precipitation;
+
+    // Update local state
+    setUnitSystem(newSystem);
+    setTemperature(newTemp);
+    setWind(newWind);
+    setPrecipitation(newPrecip);
+
+    // Notify parent
+    onSelect({
+      system: newSystem,
+      temperature: newTemp,
+      wind: newWind,
+      precipitation: newPrecip,
+    });
+  };
+
   return (
-    <div>
-      <div className="bg-neutral-700 p-2 mt-2 w-46 md:w-50 rounded-md z-10 outline outline-neutral-500/80 shadow-xl">
-        {/* Switch to Imperial */}
-        <div className=" cursor-pointer hover:bg-neutral-300/10 py-[5px] px-2 rounded-md shadow-2xl ">
-          <h1 className=" text-sm md:text-md">Switch to Imperial</h1>
-        </div>
+    <div className="bg-neutral-700 p-2 mt-2 w-46 md:w-50 rounded-md z-10 outline outline-neutral-500/80 shadow-xl">
+      {/* Switch Metric / Imperial */}
+      <div
+        onClick={() =>
+          updatePreferences({
+            system: unitSystem === "metric" ? "imperial" : "metric",
+          })
+        }
+        className="cursor-pointer hover:bg-neutral-300/10 py-[5px] px-2 rounded-md shadow-2xl"
+      >
+        <h1 className="text-sm md:text-md">
+          {unitSystem === "metric" ? "Switch to Imperial" : "Switch to Metric"}
+        </h1>
+      </div>
 
-        {/* Temperature */}
-        <div>
-          <p className=" text-sm my-2 font-[300] text-neutral-200">
-            Temperature
-          </p>
-          <div className=" cursor-pointer hover:bg-neutral-300/10 py-[5px] px-2 rounded-md shadow-2xl ">
-            <h1 className=" text-sm md:text-md">Celsius (&deg;C)</h1>
-          </div>
-          <div className=" cursor-pointer hover:bg-neutral-300/10 py-[5px] px-2 rounded-md shadow-2xl ">
-            <h1 className=" text-sm md:text-md">Fahrenheit (&deg;F)</h1>
-          </div>
-          <hr className=" border-neutral-600" />
+      {/* Temperature */}
+      <div>
+        <p className="text-sm my-2 font-[300] text-neutral-200">Temperature</p>
+        <div
+          onClick={() => updatePreferences({ temperature: "celsius" })}
+          className={`cursor-pointer py-[5px] px-2 rounded-md shadow-2xl ${
+            temperature === "celsius"
+              ? "bg-neutral-600 text-white"
+              : "hover:bg-neutral-300/10"
+          }`}
+        >
+          <h1 className="text-sm md:text-md">Celsius (°C)</h1>
         </div>
+        <div
+          onClick={() => updatePreferences({ temperature: "fahrenheit" })}
+          className={`cursor-pointer py-[5px] px-2 rounded-md shadow-2xl ${
+            temperature === "fahrenheit"
+              ? "bg-neutral-600 text-white"
+              : "hover:bg-neutral-300/10"
+          }`}
+        >
+          <h1 className="text-sm md:text-md">Fahrenheit (°F)</h1>
+        </div>
+        <hr className="border-neutral-600" />
+      </div>
 
-        {/* Wind Speed */}
-        <div>
-          <p className=" text-sm my-2 font-[300] text-neutral-200">
-            Wind Speed
-          </p>
-          <div className=" cursor-pointer hover:bg-neutral-300/10 py-[5px] px-2 rounded-md shadow-2xl ">
-            <h1 className=" text-sm md:text-md">Km/h</h1>
-          </div>
-          <div className=" cursor-pointer hover:bg-neutral-300/10 py-[5px] px-2 rounded-md shadow-2xl ">
-            <h1 className=" text-sm md:text-md">mph</h1>
-          </div>
-          <hr className=" border-neutral-600" />
+      {/* Wind Speed */}
+      <div>
+        <p className="text-sm my-2 font-[300] text-neutral-200">Wind Speed</p>
+        <div
+          onClick={() => updatePreferences({ wind: "kmh" })}
+          className={`cursor-pointer py-[5px] px-2 rounded-md shadow-2xl ${
+            wind === "kmh"
+              ? "bg-neutral-600 text-white"
+              : "hover:bg-neutral-300/10"
+          }`}
+        >
+          <h1 className="text-sm md:text-md">Km/h</h1>
         </div>
-        {/* Precipitation*/}
-        <div>
-          <p className=" text-sm my-2 font-[300] text-neutral-200">
-            Precipitation
-          </p>
-          <div className=" cursor-pointer hover:bg-neutral-300/10 py-[5px] px-2 rounded-md shadow-2xl ">
-            <h1 className=" text-sm md:text-md">Millimeters (mm)</h1>
-          </div>
-          <div className=" cursor-pointer hover:bg-neutral-300/10 py-[5px] px-2 rounded-md shadow-2xl ">
-            <h1 className=" text-sm md:text-md">Inches (in)</h1>
-          </div>
+        <div
+          onClick={() => updatePreferences({ wind: "mph" })}
+          className={`cursor-pointer py-[5px] px-2 rounded-md shadow-2xl ${
+            wind === "mph"
+              ? "bg-neutral-600 text-white"
+              : "hover:bg-neutral-300/10"
+          }`}
+        >
+          <h1 className="text-sm md:text-md">mph</h1>
+        </div>
+        <hr className="border-neutral-600" />
+      </div>
+
+      {/* Precipitation */}
+      <div>
+        <p className="text-sm my-2 font-[300] text-neutral-200">
+          Precipitation
+        </p>
+        <div
+          onClick={() => updatePreferences({ precipitation: "mm" })}
+          className={`cursor-pointer py-[5px] px-2 rounded-md shadow-2xl ${
+            precipitation === "mm"
+              ? "bg-neutral-600 text-white"
+              : "hover:bg-neutral-300/10"
+          }`}
+        >
+          <h1 className="text-sm md:text-md">Millimeters (mm)</h1>
+        </div>
+        <div
+          onClick={() => updatePreferences({ precipitation: "in" })}
+          className={`cursor-pointer py-[5px] px-2 rounded-md shadow-2xl ${
+            precipitation === "in"
+              ? "bg-neutral-600 text-white"
+              : "hover:bg-neutral-300/10"
+          }`}
+        >
+          <h1 className="text-sm md:text-md">Inches (in)</h1>
         </div>
       </div>
     </div>

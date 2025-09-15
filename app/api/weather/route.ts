@@ -7,6 +7,11 @@ export async function GET(req: Request) {
     const lat = searchParams.get("lat");
     const lon = searchParams.get("lon");
 
+    // Units (with defaults if not provided)
+    const tempUnit = searchParams.get("tempUnit") || "celsius"; // "celsius" | "fahrenheit"
+    const windUnit = searchParams.get("windUnit") || "kmh"; // "kmh" | "mph"
+    const precipUnit = searchParams.get("precipUnit") || "mm"; // "mm" | "inch"
+
     // Weather API
     const weatherRes = await axios.get(
       "https://api.open-meteo.com/v1/forecast",
@@ -15,16 +20,20 @@ export async function GET(req: Request) {
           latitude: lat,
           longitude: lon,
           current_weather: true,
-          hourly: "apparent_temperature,relativehumidity_2m,precipitation",
+          hourly:
+            "apparent_temperature,relativehumidity_2m,precipitation,weathercode",
           daily: "temperature_2m_max,temperature_2m_min,weathercode",
           timezone: "auto",
+          temperature_unit: tempUnit,
+          windspeed_unit: windUnit,
+          precipitation_unit: precipUnit,
         },
       }
     );
 
     const weatherData = weatherRes.data.current_weather;
 
-    // Reverse geocoding (must send User-Agent!)
+    // Reverse geocoding
     const geoRes = await axios.get(
       "https://nominatim.openstreetmap.org/reverse",
       {
@@ -49,14 +58,12 @@ export async function GET(req: Request) {
       "Unknown";
     const country = geo.address.country || "Unknown";
 
-    // Get the current hour in the same format as Open-Meteo
+    // Current hour for indexing
     const now = new Date();
-    const currentHour = now.toISOString().slice(0, 13) + ":00"; // e.g. 2025-09-12T17:00
+    const currentHour = now.toISOString().slice(0, 13) + ":00";
 
-    // Find the index in the array
     const currentHourIndex = weatherRes.data.hourly.time.indexOf(currentHour);
 
-    // Safely extract values if found
     const feelsLike =
       currentHourIndex !== -1
         ? weatherRes.data.hourly.apparent_temperature[currentHourIndex]
@@ -72,9 +79,20 @@ export async function GET(req: Request) {
         ? weatherRes.data.hourly.precipitation[currentHourIndex]
         : null;
 
-    // Daily forecast
-    const daily = weatherRes.data.daily;
+    // Group hourly forecast by day
     const hourly = weatherRes.data.hourly;
+    const groupedHourly: Record<string, any[]> = {};
+    hourly.time.forEach((t: string, i: number) => {
+      const date = t.split("T")[0];
+      if (!groupedHourly[date]) groupedHourly[date] = [];
+      groupedHourly[date].push({
+        time: t,
+        temp: hourly.apparent_temperature[i],
+        code: hourly.weathercode?.[i] ?? 0,
+      });
+    });
+
+    const daily = weatherRes.data.daily;
 
     return NextResponse.json(
       {
@@ -90,7 +108,6 @@ export async function GET(req: Request) {
         city,
         country,
 
-        // daily
         dailyForecast: daily.time.map((date: string, i: number) => ({
           date,
           max: daily.temperature_2m_max[i],
@@ -98,10 +115,13 @@ export async function GET(req: Request) {
           code: daily.weathercode[i],
         })),
 
-        hourlyForecast: {
-          time: hourly.time,
-          temperature_2m: hourly.apparent_temperature,
-          weathercode: hourly.weathercode,
+        hourlyByDay: groupedHourly,
+
+        // return selected units too (so frontend knows)
+        units: {
+          temperature: tempUnit,
+          wind: windUnit,
+          precipitation: precipUnit,
         },
       },
       { status: 200 }
