@@ -7,7 +7,6 @@ import Loading from "./Loading";
 const weatherIcons: Record<number, string> = {
   0: "/images/icon-sunny.webp",
   1: "/images/icon-partly-cloudy.webp",
-  2: "/images/icon-cloudy.webp",
   3: "/images/icon-overcast.webp",
   45: "/images/icon-fog.webp",
   48: "/images/icon-fog.webp",
