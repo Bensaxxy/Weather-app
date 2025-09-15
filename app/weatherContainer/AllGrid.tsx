@@ -4,7 +4,7 @@ import axios from "axios";
 import FirstGrid from "./FirstGrid";
 import SecondGrid from "./SecondGrid";
 import ThirdGrid from "./ThirdGrid";
-import FourthGrid from "./FourthGrid";
+import FourthGrid from "./Fourth/FourthGrid";
 
 interface WeatherData {
   temperature: number;

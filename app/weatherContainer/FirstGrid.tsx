@@ -53,7 +53,7 @@ const FirstGrid = ({
     );
   }
 
-  const icon = weatherIcons[weather.weathercode] || "/images/icon-unknown.webp";
+  const icon = weatherIcons[weather.weathercode] || "/images/icon-sunny.webp";
 
   return (
     <div className="overflow-hidden rounded-xl">
