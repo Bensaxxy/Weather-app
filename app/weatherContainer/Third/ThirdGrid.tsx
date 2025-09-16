@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
+import Loading from "./Loading";
 
 interface DailyForecast {
   date: string;
@@ -53,16 +54,7 @@ const ThirdGrid = () => {
   if (loading)
     return (
       <div className="mt-5">
-        <h1 className="font-semibold">Daily Forecast</h1>
-        <div className="grid grid-cols-3 md:grid-cols-7 gap-3 md:gap-5 mt-2">
-          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
-          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
-          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
-          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
-          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
-          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
-          <div className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/80 rounded-lg h-30"></div>
-        </div>
+        <Loading />
       </div>
     );
   if (!forecast.length) return <p>No forecast available</p>;

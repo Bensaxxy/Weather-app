@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import FirstGrid from "./FirstGrid";
 import SecondGrid from "./SecondGrid";
-import ThirdGrid from "./ThirdGrid";
+import ThirdGrid from "./Third/ThirdGrid";
 import FourthGrid from "./Fourth/FourthGrid";
 
 interface WeatherData {
