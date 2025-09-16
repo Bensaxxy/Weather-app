@@ -9,6 +9,16 @@ interface WeatherData {
   country: string;
 }
 
+interface FirstGridProps {
+  weather: WeatherData | null;
+  loading: boolean;
+  fetching: boolean;
+  error: string | null;
+  units: {
+    temperature: "celsius" | "fahrenheit";
+  };
+}
+
 const weatherIcons: Record<number, string> = {
   0: "/images/icon-sunny.webp",
   1: "/images/icon-partly-cloudy.webp",
@@ -22,14 +32,11 @@ const weatherIcons: Record<number, string> = {
   95: "/images/icon-storm.webp",
 };
 
-const FirstGrid = ({
+const FirstGrid: React.FC<FirstGridProps> = ({
   weather,
   loading,
   error,
-}: {
-  weather: WeatherData | null;
-  loading: boolean;
-  error: string | null;
+  units,
 }) => {
   if (loading) {
     return (
@@ -54,6 +61,10 @@ const FirstGrid = ({
   }
 
   const icon = weatherIcons[weather.weathercode] || "/images/icon-sunny.webp";
+  const displayTemp =
+    units.temperature === "fahrenheit"
+      ? Math.round((weather.temperature * 9) / 5 + 32)
+      : weather.temperature;
 
   return (
     <div className="overflow-hidden rounded-xl">
@@ -76,8 +87,8 @@ const FirstGrid = ({
             <Image src={icon} width={110} height={110} alt="weather-icon" />
             <span>
               <h1 className="text-6xl md:text-6xl 2xl:text-8xl font-[700] italic">
-                {weather.temperature}
-                <sup>°</sup>
+                {displayTemp}
+                <sup>°{units.temperature === "celsius" ? "" : ""}</sup>
               </h1>
             </span>
           </div>

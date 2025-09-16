@@ -18,7 +18,11 @@ interface WeatherData {
   country: string;
 }
 
-const AllGrid = () => {
+interface AllGridProps {
+  units: any;
+}
+
+const AllGrid: React.FC<AllGridProps> = ({ units }) => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,9 +40,7 @@ const AllGrid = () => {
         const lon = pos.coords.longitude;
 
         try {
-          const res = await axios.get("/api/weather", {
-            params: { lat, lon },
-          });
+          const res = await axios.get("/api/weather", { params: { lat, lon } });
           setWeather(res.data);
         } catch (err: any) {
           console.error("Error fetching weather:", err);
@@ -53,14 +55,31 @@ const AllGrid = () => {
         setLoading(false);
       }
     );
-  }, []);
+  }, [units]); // 👈 refetch when units change
 
   return (
-    <div className=" grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div className=" col-span-2">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="col-span-2">
         <div className="grid gap-4">
-          <FirstGrid weather={weather} loading={loading} error={error} />
-          <SecondGrid weather={weather} />
+          <FirstGrid
+            weather={weather}
+            loading={loading}
+            fetching={loading}
+            error={error}
+            units={units}
+          />
+          <SecondGrid
+            weather={{
+              feelsLike: weather?.feelsLike ?? null,
+              humidity: weather?.humidity ?? null,
+              windspeed: weather?.windspeed ?? 0,
+              precipitation: weather?.precipitation ?? null,
+            }}
+            units={{
+              ...units,
+              system: units.temperature === "celsius" ? "metric" : "imperial",
+            }}
+          />
           <ThirdGrid />
         </div>
       </div>

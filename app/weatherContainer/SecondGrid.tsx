@@ -1,4 +1,5 @@
 import React from "react";
+import { UnitPreferences } from "@/app/modal/UnitsModal";
 
 interface WeatherData {
   feelsLike: number | null;
@@ -7,7 +8,12 @@ interface WeatherData {
   precipitation: number | null;
 }
 
-const SecondGrid = ({ weather }: { weather: WeatherData | null }) => {
+interface SecondGridProps {
+  weather: WeatherData | null;
+  units: UnitPreferences;
+}
+
+const SecondGrid: React.FC<SecondGridProps> = ({ weather, units }) => {
   if (!weather) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
@@ -47,6 +53,7 @@ const SecondGrid = ({ weather }: { weather: WeatherData | null }) => {
         <h1 className="mt-4 text-2xl font-[300]">
           {weather.feelsLike ?? "--"}
           <sup>°</sup>
+          {units.temperature === "celsius" ? "" : ""}
         </h1>
       </div>
 
@@ -63,7 +70,10 @@ const SecondGrid = ({ weather }: { weather: WeatherData | null }) => {
       {/* Wind */}
       <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/80">
         <p className="font-[300] text-sm md:text-md text-neutral-200">Wind</p>
-        <h1 className="mt-4 text-2xl font-[300]">{weather.windspeed} Km/h</h1>
+        <h1 className="mt-4 text-2xl font-[300]">
+          {" "}
+          {weather.windspeed.toFixed(1)} {units.wind}
+        </h1>
       </div>
 
       {/* Precipitation */}
@@ -72,7 +82,7 @@ const SecondGrid = ({ weather }: { weather: WeatherData | null }) => {
           Precipitation
         </p>
         <h1 className="mt-4 text-2xl font-[300]">
-          {weather.precipitation ?? 0} mm
+          {weather.precipitation?.toFixed(2) ?? 0} {units.precipitation}
         </h1>
       </div>
     </div>
