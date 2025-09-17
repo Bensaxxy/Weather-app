@@ -1,5 +1,6 @@
 import React from "react";
 import { UnitPreferences } from "@/app/modal/UnitsModal";
+import Loading from "./Loading";
 
 interface WeatherData {
   feelsLike: number | null;
@@ -16,29 +17,8 @@ interface SecondGridProps {
 const SecondGrid: React.FC<SecondGridProps> = ({ weather, units }) => {
   if (!weather) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
-        <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/80">
-          <p className="font-[300] text-sm md:text-md text-neutral-200">
-            Feels Like
-          </p>
-          <h1 className="mt-4 text-2xl font-[300]">--</h1>
-        </div>
-        <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/80">
-          <p className="font-[300] text-sm md:text-md text-neutral-200">
-            Humidity
-          </p>
-          <h1 className="mt-4 text-2xl font-[300]">--</h1>
-        </div>
-        <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/80">
-          <p className="font-[300] text-sm md:text-md text-neutral-200">Wind</p>
-          <h1 className="mt-4 text-2xl font-[300]">--</h1>
-        </div>
-        <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/80">
-          <p className="font-[300] text-sm md:text-md text-neutral-200">
-            Precipitation
-          </p>
-          <h1 className="mt-4 text-2xl font-[300]">--</h1>
-        </div>
+      <div>
+        <Loading />
       </div>
     );
   }
@@ -46,7 +26,7 @@ const SecondGrid: React.FC<SecondGridProps> = ({ weather, units }) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5">
       {/* Feels Like */}
-      <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/80">
+      <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/60">
         <p className="font-[300] text-sm md:text-md text-neutral-200">
           Feels Like
         </p>
@@ -58,7 +38,7 @@ const SecondGrid: React.FC<SecondGridProps> = ({ weather, units }) => {
       </div>
 
       {/* Humidity */}
-      <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/80">
+      <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/60">
         <p className="font-[300] text-sm md:text-md text-neutral-200">
           Humidity
         </p>
@@ -68,7 +48,7 @@ const SecondGrid: React.FC<SecondGridProps> = ({ weather, units }) => {
       </div>
 
       {/* Wind */}
-      <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/80">
+      <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/60">
         <p className="font-[300] text-sm md:text-md text-neutral-200">Wind</p>
         <h1 className="mt-4 text-2xl font-[300]">
           {" "}
@@ -77,7 +57,7 @@ const SecondGrid: React.FC<SecondGridProps> = ({ weather, units }) => {
       </div>
 
       {/* Precipitation */}
-      <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/80">
+      <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/60">
         <p className="font-[300] text-sm md:text-md text-neutral-200">
           Precipitation
         </p>

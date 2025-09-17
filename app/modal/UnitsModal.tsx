@@ -73,7 +73,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
   };
 
   return (
-    <div className="bg-neutral-700 p-4 mt-2 w-46 md:w-55 rounded-md z-10 outline outline-neutral-500/80 shadow-xl">
+    <div className="bg-neutral-700 p-4 mt-2 w-46 md:w-55 rounded-md z-10 outline outline-neutral-500/50 shadow-xl">
       {/* Switch Metric / Imperial */}
       <div
         onClick={() =>
