@@ -84,6 +84,7 @@ const FourthGrid: React.FC<FourthGridProps> = ({ weatherData, units }) => {
                     setSelectedDay(day);
                     setIsOpen(false);
                   }}
+                  selectedDay={selectedDay}
                 />
               </div>
             )}
