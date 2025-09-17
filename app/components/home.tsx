@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Navbar from "./navbar/Navbar";
-import SearchBar from "./SearchBar";
+import SearchBar from "./searchBar/SearchBar";
 import AllGrid from "../weatherContainer/AllGrid";
 import { UnitPreferences } from "@/app/modal/UnitsModal";
 
@@ -18,7 +18,7 @@ const HomePage = () => {
   const [coords, setCoords] = useState<{ lat: number; lon: number }>({
     lat: 9.05785,
     lon: 7.49508,
-  }); // default Abuja
+  });
 
   const buildCacheKey = (u: UnitPreferences, c: { lat: number; lon: number }) =>
     `${u.system}_${u.temperature}_${u.wind}_${u.precipitation}_${c.lat}_${c.lon}`;
