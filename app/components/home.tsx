@@ -15,26 +15,29 @@ const HomePage = () => {
 
   const [weatherCache, setWeatherCache] = useState<Record<string, any>>({});
   const [weatherData, setWeatherData] = useState<any>(null);
+  const [coords, setCoords] = useState<{ lat: number; lon: number }>({
+    lat: 9.05785,
+    lon: 7.49508,
+  }); // default Abuja
 
-  const buildCacheKey = (u: UnitPreferences) =>
-    `${u.system}_${u.temperature}_${u.wind}_${u.precipitation}`;
+  const buildCacheKey = (u: UnitPreferences, c: { lat: number; lon: number }) =>
+    `${u.system}_${u.temperature}_${u.wind}_${u.precipitation}_${c.lat}_${c.lon}`;
 
-  const fetchWeather = async (selectedUnits: UnitPreferences) => {
+  const fetchWeather = async (selectedUnits: UnitPreferences, c = coords) => {
     const { temperature, wind, precipitation } = selectedUnits;
-    const key = buildCacheKey(selectedUnits);
+    const key = buildCacheKey(selectedUnits, c);
 
-    // If we already have cached data, show it instantly
+    // Serve from cache if available
     if (weatherCache[key]) {
       setWeatherData(weatherCache[key]);
     }
 
     try {
       const res = await fetch(
-        `/api/weather?lat=9.05785&lon=7.49508&tempUnit=${temperature}&windUnit=${wind}&precipUnit=${precipitation}`
+        `/api/weather?lat=${c.lat}&lon=${c.lon}&tempUnit=${temperature}&windUnit=${wind}&precipUnit=${precipitation}`
       );
       const json = await res.json();
 
-      // Save to cache
       setWeatherCache((prev) => ({ ...prev, [key]: json }));
       setWeatherData(json);
     } catch (err) {
@@ -43,13 +46,33 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    fetchWeather(units);
-  }, [units]);
+    fetchWeather(units, coords);
+  }, [units, coords]);
+
+  // 🔹 Search handler
+  const handleSearch = async (query: string) => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          query
+        )}&format=json&limit=1`
+      );
+      const results = await res.json();
+      if (results.length > 0) {
+        const { lat, lon } = results[0];
+        setCoords({ lat: parseFloat(lat), lon: parseFloat(lon) });
+      } else {
+        alert("Location not found");
+      }
+    } catch (err) {
+      console.error("Search error:", err);
+    }
+  };
 
   return (
     <div className="px-3 mb-7">
-      {/* navbar component */}
       <Navbar units={units} setUnits={setUnits} />
+
       <h1
         className="text-6xl md:text-5xl xl:text-6xl text-center my-14"
         style={{ fontFamily: "var(--font-bricolage-grotesque)" }}
@@ -57,10 +80,9 @@ const HomePage = () => {
         How's the sky looking today?
       </h1>
 
-      {/* searchbar */}
-      <SearchBar />
+      {/* Pass search handler */}
+      <SearchBar onSearch={handleSearch} />
 
-      {/* weathers section */}
       <div className="md:px-6 lg:px-16 xl:px-28 2xl:px-40">
         <AllGrid units={units} weatherData={weatherData} />
       </div>
