@@ -87,11 +87,15 @@ const HomePage = () => {
         `/api/weather?lat=${lat}&lon=${lon}&tempUnit=${temperature}&windUnit=${wind}&precipUnit=${precipitation}`
       );
       const data = await res.json();
+
+      console.log("Compare API response:", data); // 👈 check what keys exist
+
+      // Adjust keys depending on your backend response
       return {
         name: location,
-        temp: data.current?.temperature || "N/A",
-        humidity: data.current?.humidity || "N/A",
-        wind: data.current?.windspeed || "N/A",
+        temp: data?.current_weather?.temperature ?? "N/A",
+        humidity: data?.current_weather?.relative_humidity ?? "N/A",
+        wind: data?.current_weather?.windspeed ?? "N/A",
       };
     } catch (err) {
       console.error("Compare fetch error:", err);
