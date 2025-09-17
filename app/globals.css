@@ -21,3 +21,21 @@ body {
   box-sizing: border-box;
   font-size: 16px;
 }
+/* global.css */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(243, 23%, 30%); /* dark background */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(243, 27%, 20%); /* blue scroll */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: black; /* darker on hover */
+}

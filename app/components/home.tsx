@@ -23,11 +23,11 @@ const HomePage = () => {
   const buildCacheKey = (u: UnitPreferences, c: { lat: number; lon: number }) =>
     `${u.system}_${u.temperature}_${u.wind}_${u.precipitation}_${c.lat}_${c.lon}`;
 
+  // 🔹 Normal single-location weather fetch (for AllGrid)
   const fetchWeather = async (selectedUnits: UnitPreferences, c = coords) => {
     const { temperature, wind, precipitation } = selectedUnits;
     const key = buildCacheKey(selectedUnits, c);
 
-    // Serve from cache if available
     if (weatherCache[key]) {
       setWeatherData(weatherCache[key]);
     }
@@ -37,9 +37,9 @@ const HomePage = () => {
         `/api/weather?lat=${c.lat}&lon=${c.lon}&tempUnit=${temperature}&windUnit=${wind}&precipUnit=${precipitation}`
       );
       const json = await res.json();
-
       setWeatherCache((prev) => ({ ...prev, [key]: json }));
       setWeatherData(json);
+      return json;
     } catch (err) {
       console.error("Weather fetch error:", err);
     }
@@ -49,7 +49,7 @@ const HomePage = () => {
     fetchWeather(units, coords);
   }, [units, coords]);
 
-  // 🔹 Search handler
+  // 🔹 Search handler for main weather view
   const handleSearch = async (query: string) => {
     try {
       const res = await fetch(
@@ -69,19 +69,52 @@ const HomePage = () => {
     }
   };
 
+  // 🔹 Compare fetcher for SearchBar
+  const fetchWeatherForLocation = async (location: string) => {
+    try {
+      const geoRes = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+          location
+        )}&format=json&limit=1`
+      );
+      const geoData = await geoRes.json();
+      if (geoData.length === 0) return null;
+
+      const { lat, lon } = geoData[0];
+      const { temperature, wind, precipitation } = units;
+
+      const res = await fetch(
+        `/api/weather?lat=${lat}&lon=${lon}&tempUnit=${temperature}&windUnit=${wind}&precipUnit=${precipitation}`
+      );
+      const data = await res.json();
+      return {
+        name: location,
+        temp: data.current?.temperature || "N/A",
+        humidity: data.current?.humidity || "N/A",
+        wind: data.current?.windspeed || "N/A",
+      };
+    } catch (err) {
+      console.error("Compare fetch error:", err);
+      return null;
+    }
+  };
+
   return (
     <div className="px-3 mb-7">
       <Navbar units={units} setUnits={setUnits} />
 
       <h1
-        className="text-6xl md:text-5xl xl:text-6xl text-center my-14"
+        className="text-6xl md:text-5xl xl:text-6xl text-center my-10 md:my-14"
         style={{ fontFamily: "var(--font-bricolage-grotesque)" }}
       >
         How's the sky looking today?
       </h1>
 
-      {/* Pass search handler */}
-      <SearchBar onSearch={handleSearch} />
+      <SearchBar
+        onSearch={handleSearch}
+        units={units}
+        fetchWeather={fetchWeatherForLocation}
+      />
 
       <div className="md:px-6 lg:px-16 xl:px-28 2xl:px-40">
         <AllGrid units={units} weatherData={weatherData} />
