@@ -40,7 +40,7 @@ const FirstGrid: React.FC<FirstGridProps> = ({
 }) => {
   if (loading) {
     return (
-      <div className="overflow-hidden rounded-xl h-[240px] flex flex-col gap-2 items-center justify-center bg-neutral-600 text-sm">
+      <div className="overflow-hidden rounded-xl h-[240px flex flex-col gap-2 items-center justify-center bg-neutral-600 text-sm">
         <Image
           src="/images/icon-loading.svg"
           width={32}
@@ -68,8 +68,7 @@ const FirstGrid: React.FC<FirstGridProps> = ({
 
   return (
     <div className="overflow-hidden rounded-xl">
-      <div className=" relative h-[240px] bg-[url('/images/bg-today-small.svg')] bg-cover bg-center md:bg-[url('/images/bg-today-large.svg')]">
-        {/* <div className=" z-10 absolute top-0 left-0 bg-blue-500/60 h-full w-full "></div> */}
+      <div className=" relative h-[240px] bg-[url('/images/bg-today-small.svg')] bg-center bg-cover md:bg-[url('/images/bg-today-large.svg')]">
         <div className="h-full flex flex-col md:flex-row items-center md:justify-between justify-center px-4 md:px-6 text-center md:text-left">
           <div>
             <h1 className="text-2xl md:text-2xl xl:text-3xl font-[600]">

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import FirstGrid from "./FirstGrid";
+import FirstGrid from "./First/FirstGrid";
 import SecondGrid from "./Second/SecondGrid";
 import ThirdGrid from "./Third/ThirdGrid";
 import FourthGrid from "./Fourth/FourthGrid";

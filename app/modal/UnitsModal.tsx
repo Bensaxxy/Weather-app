@@ -73,15 +73,16 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
   };
 
   return (
-    <div className="bg-neutral-700 p-4 mt-2 w-46 md:w-55 rounded-md z-10 outline outline-neutral-500/50 shadow-xl">
+    <div className="bg-neutral-700 px-2 pt-2 pb-4 mt-2 w-46 md:w-50 rounded-md z-10 outline outline-neutral-500/50 shadow-xl">
       {/* Switch Metric / Imperial */}
       <div
+        tabIndex={0}
         onClick={() =>
           updatePreferences({
             system: unitSystem === "metric" ? "imperial" : "metric",
           })
         }
-        className="cursor-pointer hover:bg-neutral-300/10 py-[10px] px-2 rounded-md shadow-2xl focus:ring-2 outline-none"
+        className="cursor-pointer hover:bg-neutral-300/10 py-[10px] px-2 rounded-md shadow-2xl focus:ring-1 focus:ring-neutral-300 outline-none"
       >
         <h1 className="text-sm md:text-md">
           {unitSystem === "metric" ? "Switch to Imperial" : "Switch to Metric"}
@@ -95,7 +96,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
           onClick={() => updatePreferences({ temperature: "celsius" })}
           className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center my-2 ${
             temperature === "celsius"
-              ? "bg-neutral-600 text-white"
+              ? "bg-neutral-300/10 text-white"
               : "hover:bg-neutral-300/10"
           }`}
         >
@@ -113,7 +114,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
           onClick={() => updatePreferences({ temperature: "fahrenheit" })}
           className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center my-2 ${
             temperature === "fahrenheit"
-              ? "bg-neutral-600 text-white"
+              ? "bg-neutral-300/10 text-white"
               : "hover:bg-neutral-300/10"
           }`}
         >
@@ -135,7 +136,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
         onClick={() => updatePreferences({ wind: "kmh" })}
         className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center my-2 ${
           wind === "kmh"
-            ? "bg-neutral-600 text-white"
+            ? "bg-neutral-300/10 text-white"
             : "hover:bg-neutral-300/10"
         }`}
       >
@@ -153,7 +154,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
         onClick={() => updatePreferences({ wind: "mph" })}
         className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center my-2 ${
           wind === "mph"
-            ? "bg-neutral-600 text-white"
+            ? "bg-neutral-300/10 text-white"
             : "hover:bg-neutral-300/10"
         }`}
       >
@@ -173,7 +174,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
         onClick={() => updatePreferences({ precipitation: "mm" })}
         className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center my-2 ${
           precipitation === "mm"
-            ? "bg-neutral-600 text-white"
+            ? "bg-neutral-300/10 text-white"
             : "hover:bg-neutral-300/10"
         }`}
       >
@@ -191,7 +192,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
         onClick={() => updatePreferences({ precipitation: "in" })}
         className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center ${
           precipitation === "in"
-            ? "bg-neutral-600 text-white"
+            ? "bg-neutral-300/10 text-white"
             : "hover:bg-neutral-300/10"
         }`}
       >

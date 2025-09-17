@@ -68,7 +68,7 @@ const FourthGrid: React.FC<FourthGridProps> = ({ weatherData, units }) => {
           <button
             onClick={toggleModal}
             type="button"
-            className="bg-neutral-300/20 rounded-sm py-1 px-3 flex items-center gap-2 relative cursor-pointer focus:ring-2 outline-none"
+            className="bg-neutral-300/20 rounded-sm py-1 px-3 flex items-center gap-2 relative cursor-pointer focus:ring-1 outline-none"
           >
             <span>{selectedDay}</span>
             <Image
