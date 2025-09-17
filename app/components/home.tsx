@@ -88,13 +88,13 @@ const HomePage = () => {
       );
       const data = await res.json();
 
-      console.log("Compare API response:", data); // 👈 check what keys exist
+      // console.log(data);
 
       // Adjust keys depending on your backend response
       return {
         name: location,
         temp: data?.current_weather?.temperature ?? "N/A",
-        humidity: data?.current_weather?.relative_humidity ?? "N/A",
+        humidity: data?.humidity ?? "N/A",
         wind: data?.current_weather?.windspeed ?? "N/A",
       };
     } catch (err) {

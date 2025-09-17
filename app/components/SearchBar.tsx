@@ -153,7 +153,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               </span>
               <button
                 onClick={() => handleAddCompare(s.name)}
-                className="text-green-400 text-sm font-semibold hover:underline"
+                className="text-green-400 text-sm font-semibold hover:underline cursor-pointer"
               >
                 + Add
               </button>
@@ -164,7 +164,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
       {/* Compare List Grid */}
       {compareList.length > 0 && (
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className=" mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  2xl:grid-cols-6 gap-4">
           {compareList.map((location) => (
             <div
               key={location}
@@ -172,7 +172,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
             >
               <button
                 onClick={() => handleRemoveCompare(location)}
-                className="absolute top-2 right-2 text-red-400 font-bold"
+                className="absolute top-2 right-2 text-red-500 font-bold cursor-pointer"
               >
                 ✕
               </button>
