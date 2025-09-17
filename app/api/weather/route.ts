@@ -7,10 +7,29 @@ export async function GET(req: Request) {
     const lat = searchParams.get("lat");
     const lon = searchParams.get("lon");
 
-    // Units (with defaults if not provided)
-    const tempUnit = searchParams.get("tempUnit") || "celsius"; // "celsius" | "fahrenheit"
-    const windUnit = searchParams.get("windUnit") || "kmh"; // "kmh" | "mph"
-    const precipUnit = searchParams.get("precipUnit") || "mm"; // "mm" | "inch"
+    // Map frontend-friendly values to Open-Meteo API units
+    const tempUnitParam = searchParams.get("tempUnit") || "celsius"; // celsius | fahrenheit
+    const windUnitParam = searchParams.get("windUnit") || "kmh"; // kmh | mph
+    const precipUnitParam = searchParams.get("precipUnit") || "mm"; // mm | inch
+
+    // Map to Open-Meteo API valid values
+    const tempUnitMap: Record<string, string> = {
+      celsius: "celsius",
+      fahrenheit: "fahrenheit",
+    };
+    const windUnitMap: Record<string, string> = {
+      kmh: "kmh",
+      mph: "mph",
+    };
+    const precipUnitMap: Record<string, string> = {
+      mm: "mm",
+      inch: "inch",
+    };
+
+    // Ensure only valid units are passed to API
+    const temperature_unit = tempUnitMap[tempUnitParam] || "celsius";
+    const windspeed_unit = windUnitMap[windUnitParam] || "kmh";
+    const precipitation_unit = precipUnitMap[precipUnitParam] || "mm";
 
     // Weather API
     const weatherRes = await axios.get(
@@ -24,9 +43,9 @@ export async function GET(req: Request) {
             "apparent_temperature,relativehumidity_2m,precipitation,weathercode",
           daily: "temperature_2m_max,temperature_2m_min,weathercode",
           timezone: "auto",
-          temperature_unit: tempUnit,
-          windspeed_unit: windUnit,
-          precipitation_unit: precipUnit,
+          temperature_unit,
+          windspeed_unit,
+          precipitation_unit,
         },
       }
     );
@@ -43,7 +62,7 @@ export async function GET(req: Request) {
           format: "json",
         },
         headers: {
-          "User-Agent": "my-weather-app/1.0 (contact@example.com)", // required
+          "User-Agent": "my-weather-app/1.0 (contact@example.com)",
         },
       }
     );
@@ -61,7 +80,6 @@ export async function GET(req: Request) {
     // Current hour for indexing
     const now = new Date();
     const currentHour = now.toISOString().slice(0, 13) + ":00";
-
     const currentHourIndex = weatherRes.data.hourly.time.indexOf(currentHour);
 
     const feelsLike =
@@ -101,7 +119,6 @@ export async function GET(req: Request) {
         weathercode: weatherData.weathercode,
         windspeed: weatherData.windspeed,
         winddirection: weatherData.winddirection,
-
         feelsLike,
         humidity,
         precipitation,
@@ -117,11 +134,11 @@ export async function GET(req: Request) {
 
         hourlyByDay: groupedHourly,
 
-        // return selected units too (so frontend knows)
+        // Return selected units so frontend can render accordingly
         units: {
-          temperature: tempUnit,
-          wind: windUnit,
-          precipitation: precipUnit,
+          temperature: temperature_unit,
+          wind: windspeed_unit,
+          precipitation: precipitation_unit,
         },
       },
       { status: 200 }

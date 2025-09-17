@@ -55,7 +55,7 @@ const AllGrid: React.FC<AllGridProps> = ({ units }) => {
         setLoading(false);
       }
     );
-  }, [units]); // 👈 refetch when units change
+  }, [units]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -80,7 +80,7 @@ const AllGrid: React.FC<AllGridProps> = ({ units }) => {
               system: units.temperature === "celsius" ? "metric" : "imperial",
             }}
           />
-          <ThirdGrid />
+          <ThirdGrid units={units} />
         </div>
       </div>
       <div className="row-span-3">

@@ -11,6 +11,14 @@ interface DailyForecast {
   code: number;
 }
 
+interface ThirdGridProps {
+  units: {
+    temperature: "celsius" | "fahrenheit";
+    wind: "kmh" | "mph";
+    precipitation: "mm" | "in";
+  };
+}
+
 const weatherIcons: Record<number, string> = {
   0: "/images/icon-sunny.webp",
   1: "/images/icon-partly-cloudy.webp",
@@ -24,7 +32,7 @@ const weatherIcons: Record<number, string> = {
   95: "/images/icon-storm.webp",
 };
 
-const ThirdGrid = () => {
+const ThirdGrid: React.FC<ThirdGridProps> = ({ units }) => {
   const [forecast, setForecast] = useState<DailyForecast[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -36,10 +44,14 @@ const ThirdGrid = () => {
 
     navigator.geolocation.getCurrentPosition(async (pos) => {
       try {
+        setLoading(false);
         const res = await axios.get("/api/weather", {
           params: {
             lat: pos.coords.latitude,
             lon: pos.coords.longitude,
+            tempUnit: units.temperature, // 👈 pass temperature unit
+            windUnit: units.wind, // 👈 pass wind unit
+            precipUnit: units.precipitation, // 👈 pass precip unit
           },
         });
         setForecast(res.data.dailyForecast);
@@ -49,7 +61,7 @@ const ThirdGrid = () => {
         setLoading(false);
       }
     });
-  }, []);
+  }, [units]); // 👈 re-run fetch when units change
 
   if (loading)
     return (
@@ -57,6 +69,7 @@ const ThirdGrid = () => {
         <Loading />
       </div>
     );
+
   if (!forecast.length) return <p>No forecast available</p>;
 
   return (
