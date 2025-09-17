@@ -3,7 +3,7 @@ import React from "react";
 
 const ProgressLoading = () => {
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 items-center bg-amber-900">
       <Image
         src="/images/icon-loading.svg"
         width={30}

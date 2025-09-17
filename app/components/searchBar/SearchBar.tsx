@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import ProgressLoading from "./ProgressLoading";
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -21,6 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [recents, setRecents] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Compare list + weather data
   const [compareList, setCompareList] = useState<string[]>([]);
@@ -39,7 +41,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim()) handleSelect(input.trim());
+    if (input.trim()) setLoading(true);
+    handleSelect(input.trim());
+    setLoading(false);
   };
 
   const handleSelect = (location: string) => {
@@ -57,6 +61,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleAddCompare = async (location: string) => {
+    setLoading(true);
     if (!compareList.includes(location)) {
       setCompareList((prev) => [...prev, location]);
 
@@ -64,6 +69,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       const data = await fetchWeather(location);
       setWeatherData((prev) => ({ ...prev, [location]: data }));
     }
+    setLoading(false);
     setSuggestions([]);
     setShowSuggestions(false);
     setInput(""); // clear search input after adding
@@ -134,6 +140,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
           Search
         </button>
       </form>
+
+      {loading && (
+        <div className="mt-2 flex justify-center">
+          <ProgressLoading />
+        </div>
+      )}
 
       {/* Suggestions dropdown */}
       {showSuggestions && combinedSuggestions.length > 0 && (
