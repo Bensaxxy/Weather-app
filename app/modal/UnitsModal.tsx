@@ -93,7 +93,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
         <p className="text-sm my-2 font-[300] text-neutral-200">Temperature</p>
         <div
           onClick={() => updatePreferences({ temperature: "celsius" })}
-          className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center ${
+          className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center my-2 ${
             temperature === "celsius"
               ? "bg-neutral-600 text-white"
               : "hover:bg-neutral-300/10"
@@ -111,7 +111,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
         </div>
         <div
           onClick={() => updatePreferences({ temperature: "fahrenheit" })}
-          className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center ${
+          className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center my-2 ${
             temperature === "fahrenheit"
               ? "bg-neutral-600 text-white"
               : "hover:bg-neutral-300/10"
@@ -133,7 +133,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
       {/* Wind */}
       <div
         onClick={() => updatePreferences({ wind: "kmh" })}
-        className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center ${
+        className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center my-2 ${
           wind === "kmh"
             ? "bg-neutral-600 text-white"
             : "hover:bg-neutral-300/10"
@@ -151,7 +151,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
       </div>
       <div
         onClick={() => updatePreferences({ wind: "mph" })}
-        className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center ${
+        className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center my-2 ${
           wind === "mph"
             ? "bg-neutral-600 text-white"
             : "hover:bg-neutral-300/10"
@@ -171,7 +171,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
       {/* Precipitation */}
       <div
         onClick={() => updatePreferences({ precipitation: "mm" })}
-        className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center ${
+        className={`cursor-pointer py-[8px] px-2 rounded-md shadow-2xl flex justify-between items-center my-2 ${
           precipitation === "mm"
             ? "bg-neutral-600 text-white"
             : "hover:bg-neutral-300/10"
