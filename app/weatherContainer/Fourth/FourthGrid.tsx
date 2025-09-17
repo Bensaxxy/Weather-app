@@ -91,7 +91,7 @@ const FourthGrid: React.FC<FourthGridProps> = ({ weatherData, units }) => {
         </div>
 
         <div>
-          {!hourly.length && <p>No hourly forecast available</p>}
+          {!hourly.length && <Loading />}
 
           {hourly.map((h, i) => {
             const hour = new Date(h.time).getHours();

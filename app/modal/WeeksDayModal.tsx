@@ -31,7 +31,7 @@ const WeeksDayModal: React.FC<WeeksDayModalProps> = ({ onSelect }) => {
           className={`cursor-pointer py-[6px] px-2 rounded-md shadow-2xl transition my-3 
             ${
               activeDay === day
-                ? "bg-blue-600 text-white" // active highlight
+                ? "bg-neutral-600 text-white" // active highlight
                 : "hover:bg-neutral-300/10"
             }`}
         >
