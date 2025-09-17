@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import WeeksDayModal from "../../modal/WeeksDayModal";
 import Loading from "./Loading";
+import { UnitPreferences } from "@/app/modal/UnitsModal";
 
 const weatherIcons: Record<number, string> = {
   0: "/images/icon-sunny.webp",
@@ -16,62 +17,51 @@ const weatherIcons: Record<number, string> = {
   95: "/images/icon-storm.webp",
 };
 
-const FourthGrid = () => {
+interface FourthGridProps {
+  weatherData: any;
+  units: UnitPreferences;
+}
+
+const FourthGrid: React.FC<FourthGridProps> = ({ weatherData, units }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [hourly, setHourly] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [selectedDay, setSelectedDay] = useState("Today");
 
   const toggleModal = () => setIsOpen((prev) => !prev);
 
-  const fetchWeather = async (day: string = "Today") => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/weather?lat=6.5244&lon=3.3792`);
-      if (!res.ok) throw new Error("Failed to fetch hourly forecast");
-      const data = await res.json();
+  const getForecastForDay = (day: string) => {
+    if (!weatherData?.hourlyByDay) return [];
 
-      // Map days of week to API dates
-      const todayDate = new Date().toISOString().split("T")[0];
-      const daysOfWeek = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
+    const todayDate = new Date().toISOString().split("T")[0];
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
 
-      let targetDate = todayDate;
-      if (day !== "Today") {
-        const todayIndex = new Date().getDay();
-        const dayIndex = daysOfWeek.indexOf(day);
-        const diff = (dayIndex - todayIndex + 7) % 7; // days ahead
-        const target = new Date();
-        target.setDate(target.getDate() + diff);
-        targetDate = target.toISOString().split("T")[0];
-      }
-
-      const forecast = data.hourlyByDay[targetDate] || [];
-
-      setHourly(forecast.slice(0, 8)); // first 8 hours
-      setSelectedDay(day);
-      setIsOpen(false);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    let targetDate = todayDate;
+    if (day !== "Today") {
+      const todayIndex = new Date().getDay();
+      const dayIndex = daysOfWeek.indexOf(day);
+      const diff = (dayIndex - todayIndex + 7) % 7;
+      const target = new Date();
+      target.setDate(target.getDate() + diff);
+      targetDate = target.toISOString().split("T")[0];
     }
+
+    return weatherData.hourlyByDay[targetDate] || [];
   };
 
   useEffect(() => {
-    fetchWeather("Today");
-  }, []);
+    setHourly(getForecastForDay(selectedDay).slice(0, 8));
+  }, [selectedDay, weatherData]);
 
   return (
-    <div className="">
+    <div>
       <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/50 w-full">
         <div className="flex items-center justify-between mb-2">
           <h1>Hourly forecast</h1>
@@ -89,43 +79,42 @@ const FourthGrid = () => {
             />
             {isOpen && (
               <div className="absolute right-0 top-8 z-50">
-                <WeeksDayModal onSelect={fetchWeather} />
+                <WeeksDayModal
+                  onSelect={(day) => {
+                    setSelectedDay(day);
+                    setIsOpen(false);
+                  }}
+                />
               </div>
             )}
           </button>
         </div>
 
         <div>
-          {loading && <Loading />}
-          {error && <p className="text-red-500">{error}</p>}
-          {!loading && !error && hourly.length === 0 && (
-            <p>No hourly forecast available</p>
-          )}
+          {!hourly.length && <p>No hourly forecast available</p>}
 
-          {!loading &&
-            !error &&
-            hourly.map((h, i) => {
-              const hour = new Date(h.time).getHours();
-              const ampm = hour >= 12 ? "PM" : "AM";
-              const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-              const icon = weatherIcons[h.code] || "/images/icon-drizzle.webp";
+          {hourly.map((h, i) => {
+            const hour = new Date(h.time).getHours();
+            const ampm = hour >= 12 ? "PM" : "AM";
+            const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+            const icon = weatherIcons[h.code] || "/images/icon-drizzle.webp";
 
-              return (
-                <div
-                  key={i}
-                  className="bg-neutral-300/20 rounded-md px-3 py-2 flex justify-between items-center mb-[13px]"
-                >
-                  <span className="flex items-center gap-1">
-                    <Image src={icon} width={30} height={30} alt="wi" />
-                    {displayHour} {ampm}
-                  </span>
-                  <span>
-                    {Math.round(h.temp)}
-                    <sup>°</sup>
-                  </span>
-                </div>
-              );
-            })}
+            return (
+              <div
+                key={i}
+                className="bg-neutral-300/20 rounded-md px-3 py-2 flex justify-between items-center mb-[13px]"
+              >
+                <span className="flex items-center gap-1">
+                  <Image src={icon} width={30} height={30} alt="wi" />
+                  {displayHour} {ampm}
+                </span>
+                <span>
+                  {Math.round(h.temp)}
+                  <sup>°</sup> {units.temperature === "celsius" ? "" : ""}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

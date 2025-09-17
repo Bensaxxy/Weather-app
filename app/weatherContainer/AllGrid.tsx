@@ -57,7 +57,7 @@ const AllGrid: React.FC<AllGridProps> = ({ units, weatherData }) => {
         </div>
       </div>
       <div className="row-span-3">
-        <FourthGrid />
+        <FourthGrid units={units} weatherData={weatherData} />
       </div>
     </div>
   );
