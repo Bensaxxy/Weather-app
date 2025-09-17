@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import Image from "next/image";
 import Loading from "./Loading";
 
@@ -17,6 +16,7 @@ interface ThirdGridProps {
     wind: "kmh" | "mph";
     precipitation: "mm" | "in";
   };
+  forecast: DailyForecast[];
 }
 
 const weatherIcons: Record<number, string> = {
@@ -32,45 +32,13 @@ const weatherIcons: Record<number, string> = {
   95: "/images/icon-storm.webp",
 };
 
-const ThirdGrid: React.FC<ThirdGridProps> = ({ units }) => {
-  const [forecast, setForecast] = useState<DailyForecast[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      setLoading(false);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      try {
-        setLoading(false);
-        const res = await axios.get("/api/weather", {
-          params: {
-            lat: pos.coords.latitude,
-            lon: pos.coords.longitude,
-            tempUnit: units.temperature, // 👈 pass temperature unit
-            windUnit: units.wind, // 👈 pass wind unit
-            precipUnit: units.precipitation, // 👈 pass precip unit
-          },
-        });
-        setForecast(res.data.dailyForecast);
-      } catch (error) {
-        console.error("Failed to fetch forecast:", error);
-      } finally {
-        setLoading(false);
-      }
-    });
-  }, [units]); // 👈 re-run fetch when units change
-
-  if (loading)
+const ThirdGrid: React.FC<ThirdGridProps> = ({ units, forecast }) => {
+  if (!forecast.length)
     return (
-      <div className="mt-5">
+      <div>
         <Loading />
       </div>
     );
-
-  if (!forecast.length) return <p>No forecast available</p>;
 
   return (
     <div className="mt-5">

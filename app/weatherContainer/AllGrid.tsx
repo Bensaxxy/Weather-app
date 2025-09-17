@@ -15,6 +15,7 @@ interface WeatherData {
   precipitation: number | null;
   city: string;
   country: string;
+  dailyForecast?: any[]; // Add this property to fix the error
 }
 
 interface AllGridProps {
@@ -49,7 +50,10 @@ const AllGrid: React.FC<AllGridProps> = ({ units, weatherData }) => {
               system: units.temperature === "celsius" ? "metric" : "imperial",
             }}
           />
-          <ThirdGrid units={units} />
+          <ThirdGrid
+            units={units}
+            forecast={weatherData?.dailyForecast ?? []}
+          />
         </div>
       </div>
       <div className="row-span-3">
