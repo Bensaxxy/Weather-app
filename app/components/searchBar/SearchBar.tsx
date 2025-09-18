@@ -39,10 +39,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
     localStorage.setItem("recentSearches", JSON.stringify(recents));
   }, [recents]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) setLoading(true);
-    handleSelect(input.trim());
+    await handleSelect(input.trim());
     setLoading(false);
   };
 
@@ -84,6 +84,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   // Live suggestions (OSM Nominatim API)
   const fetchSuggestions = async (query: string) => {
+    setLoading(true);
     try {
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
@@ -94,6 +95,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
       setSuggestions(data);
     } catch (err) {
       console.error("Error fetching suggestions:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -142,7 +145,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       </form>
 
       {loading && (
-        <div className="mt-2 flex justify-center">
+        <div className="mt-2 flex justify-center absolute left-1/2 transform -translate-x-1/2 w-full md:w-96 lg:w-[450px]">
           <ProgressLoading />
         </div>
       )}

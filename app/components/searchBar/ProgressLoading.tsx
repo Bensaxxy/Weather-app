@@ -3,11 +3,11 @@ import React from "react";
 
 const ProgressLoading = () => {
   return (
-    <div className="flex gap-2 items-center bg-amber-900">
+    <div className="flex gap-2 items-center bg-neutral-600 rounded-lg py-3 px-4">
       <Image
         src="/images/icon-loading.svg"
-        width={30}
-        height={30}
+        width={20}
+        height={20}
         alt="loading"
       />
       <h1>Search in progress</h1>
