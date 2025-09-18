@@ -64,13 +64,12 @@ const FirstGrid: React.FC<FirstGridProps> = ({
   return (
     <div className="overflow-hidden rounded-xl">
       <div className=" relative h-[240px] bg-[url('/images/bg-today-small.svg')] bg-cover bg-center md:bg-[url('/images/bg-today-large.svg')]">
-        {/* <div className=" z-10 absolute top-0 left-0 bg-blue-500/60 h-full w-full "></div> */}
         <div className="h-full flex flex-col md:flex-row items-center md:justify-between justify-center px-4 md:px-6 text-center md:text-left">
           <div>
             <h1 className="text-2xl md:text-2xl xl:text-3xl font-[600]">
               {weather.city}, {weather.country}
             </h1>
-            <p className="font-[300] mt-2 text-neutral-0 text-sm md:text-md">
+            <p className="font-[300] mt-3 text-neutral-0 text-sm md:text-md">
               {new Date().toLocaleDateString("en-US", {
                 weekday: "long",
                 month: "short",

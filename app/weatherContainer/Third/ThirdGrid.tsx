@@ -52,10 +52,10 @@ const ThirdGrid: React.FC<ThirdGridProps> = ({ units, forecast }) => {
           return (
             <div
               key={i}
-              className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-3 outline outline-neutral-500/60 rounded-lg"
+              className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-1 outline outline-neutral-500/60 rounded-lg"
             >
               <h1 className="text-sm font-[500] text-neutral-0">{weekday}</h1>
-              <Image src={icon} width={40} height={40} alt="weather" />
+              <Image src={icon} width={60} height={60} alt="weather" />
               <div className="flex justify-between items-center w-full">
                 <span className="flex text-sm font-[500] text-neutral-200">
                   <p>{Math.round(day.max)}</p>

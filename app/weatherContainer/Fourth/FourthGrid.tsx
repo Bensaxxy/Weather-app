@@ -103,10 +103,10 @@ const FourthGrid: React.FC<FourthGridProps> = ({ weatherData, units }) => {
             return (
               <div
                 key={i}
-                className="bg-neutral-300/20 rounded-md px-3 py-2 flex justify-between items-center mb-[13px]"
+                className="bg-neutral-300/20 rounded-md px-3 py-[5.5px] flex justify-between items-center mb-[13px]"
               >
                 <span className="flex items-center gap-1">
-                  <Image src={icon} width={30} height={30} alt="wi" />
+                  <Image src={icon} width={35} height={35} alt="wi" />
                   {displayHour} {ampm}
                 </span>
                 <span>
