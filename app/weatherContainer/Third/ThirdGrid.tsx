@@ -52,7 +52,7 @@ const ThirdGrid: React.FC<ThirdGridProps> = ({ units, forecast }) => {
           return (
             <div
               key={i}
-              className="bg-neutral-700 py-2 px-2 flex flex-col justify-center items-center text-center gap-1 outline outline-neutral-500/60 rounded-lg"
+              className="bg-neutral-700 dark:bg-neutral-950 py-2 px-2 flex flex-col justify-center items-center text-center gap-1 outline outline-neutral-500/60 rounded-lg"
             >
               <h1 className="text-sm font-[500] text-neutral-0">{weekday}</h1>
               <Image src={icon} width={60} height={60} alt="weather" />

@@ -126,7 +126,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         onSubmit={handleSubmit}
         className="flex flex-col md:flex-row justify-center gap-2 items-center"
       >
-        <div className="flex items-center gap-4 bg-neutral-200/30 backdrop-blur-sm rounded-md py-3 px-4 w-full md:w-96 lg:w-[450px] focus-within:ring-2 focus-within:ring-neutral-0 relative">
+        <div className="flex items-center gap-4 bg-neutral-800 dark:bg-neutral-200/30 backdrop-blur-sm rounded-md py-3 px-4 w-full md:w-96 lg:w-[450px] focus-within:ring-2 focus-within:ring-neutral-0 relative">
           <img src="/images/icon-search.svg" alt="search-icon" />
           <input
             type="text"

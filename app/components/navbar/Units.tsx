@@ -16,7 +16,7 @@ const Units: React.FC<UnitsProps> = ({ units, setUnits }) => {
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         type="button"
-        className="flex gap-2 items-center cursor-pointer bg-neutral-700 py-2 px-3 rounded focus:ring-1 focus:ring-neutral-200 outline-none"
+        className="flex gap-2 items-center cursor-pointer bg-neutral-800 dark:bg-neutral-200/30 py-2 px-3 rounded focus:ring-1 focus:ring-neutral-200 outline-none"
       >
         <Image
           src="/images/icon-units.svg"

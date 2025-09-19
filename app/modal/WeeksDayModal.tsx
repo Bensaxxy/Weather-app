@@ -20,7 +20,7 @@ const WeeksDayModal: React.FC<WeeksDayModalProps> = ({
   selectedDay,
 }) => {
   return (
-    <div className="bg-neutral-700 p-2 mt-2 w-46 md:w-50 rounded-md outline outline-neutral-500/30 shadow-xl text-left">
+    <div className="bg-neutral-700 dark:bg-neutral-950 p-2 mt-2 w-46 md:w-50 rounded-md outline outline-neutral-500/30 shadow-xl text-left">
       {days.map((day) => (
         <div
           key={day}

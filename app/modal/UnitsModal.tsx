@@ -73,7 +73,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
   };
 
   return (
-    <div className="bg-neutral-700 px-2 pt-2 pb-4 mt-2 w-46 md:w-50 rounded-md z-10 outline outline-neutral-500/50 shadow-xl">
+    <div className="bg-neutral-700 dark:bg-neutral-950 px-2 pt-2 pb-4 mt-2 w-46 md:w-50 rounded-md z-10 outline outline-neutral-500/50 shadow-xl">
       {/* Switch Metric / Imperial */}
       <div
         tabIndex={0}

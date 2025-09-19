@@ -62,7 +62,7 @@ const FourthGrid: React.FC<FourthGridProps> = ({ weatherData, units }) => {
 
   return (
     <div>
-      <div className="bg-neutral-700 rounded-lg p-4 outline outline-neutral-500/50 w-full">
+      <div className="bg-neutral-700 dark:bg-neutral-950 rounded-lg p-4 outline outline-neutral-500/50 w-full">
         <div className="flex items-center justify-between mb-2">
           <h1>Hourly forecast</h1>
           <button
