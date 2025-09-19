@@ -22,7 +22,7 @@ const CompareGrid: React.FC<CompareGridProps> = ({
   if (compareList.length === 0) return null;
 
   return (
-    <div className="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6 gap-4">
+    <div className="mt-3 md:px-6 lg:px-16 xl:px-28 2xl:px-40 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
       <div>
         <h1 className="font-semibold mb-2">Comparing Locations</h1>
 
