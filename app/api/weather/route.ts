@@ -7,12 +7,18 @@ export async function GET(req: Request) {
     const lat = searchParams.get("lat");
     const lon = searchParams.get("lon");
 
-    // Map frontend-friendly values to Open-Meteo API units
-    const tempUnitParam = searchParams.get("tempUnit") || "celsius"; // celsius | fahrenheit
-    const windUnitParam = searchParams.get("windUnit") || "kmh"; // kmh | mph
-    const precipUnitParam = searchParams.get("precipUnit") || "mm"; // mm | inch
+    if (!lat || !lon) {
+      return NextResponse.json(
+        { error: "Missing latitude or longitude" },
+        { status: 400 }
+      );
+    }
 
-    // Map to Open-Meteo API valid values
+    // Map frontend-friendly values to Open-Meteo API units
+    const tempUnitParam = searchParams.get("tempUnit") || "celsius";
+    const windUnitParam = searchParams.get("windUnit") || "kmh";
+    const precipUnitParam = searchParams.get("precipUnit") || "mm";
+
     const tempUnitMap: Record<string, string> = {
       celsius: "celsius",
       fahrenheit: "fahrenheit",
@@ -26,7 +32,6 @@ export async function GET(req: Request) {
       inch: "inch",
     };
 
-    // Ensure only valid units are passed to API
     const temperature_unit = tempUnitMap[tempUnitParam] || "celsius";
     const windspeed_unit = windUnitMap[windUnitParam] || "kmh";
     const precipitation_unit = precipUnitMap[precipUnitParam] || "mm";
@@ -41,7 +46,8 @@ export async function GET(req: Request) {
           current_weather: true,
           hourly:
             "apparent_temperature,relativehumidity_2m,precipitation,weathercode",
-          daily: "temperature_2m_max,temperature_2m_min,weathercode",
+          daily:
+            "temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset",
           timezone: "auto",
           temperature_unit,
           windspeed_unit,
@@ -56,13 +62,10 @@ export async function GET(req: Request) {
     const geoRes = await axios.get(
       "https://nominatim.openstreetmap.org/reverse",
       {
-        params: {
-          lat,
-          lon,
-          format: "json",
-        },
+        params: { lat, lon, format: "json" },
         headers: {
-          "User-Agent": "my-weather-app/1.0 (contact@example.com)",
+          "User-Agent":
+            "my-weather-app/1.0 (https://github.com/yourusername/yourrepo)",
         },
       }
     );
@@ -77,10 +80,15 @@ export async function GET(req: Request) {
       "Unknown";
     const country = geo.address.country || "Unknown";
 
-    // Current hour for indexing
+    // Find current hour index (local time, not UTC)
     const now = new Date();
-    const currentHour = now.toISOString().slice(0, 13) + ":00";
-    const currentHourIndex = weatherRes.data.hourly.time.indexOf(currentHour);
+    const currentHour = weatherRes.data.hourly.time.find(
+      (t: string) => t.startsWith(now.toISOString().slice(0, 13)) // crude match, adjust if needed
+    );
+
+    const currentHourIndex = currentHour
+      ? weatherRes.data.hourly.time.indexOf(currentHour)
+      : -1;
 
     const feelsLike =
       currentHourIndex !== -1
@@ -124,17 +132,15 @@ export async function GET(req: Request) {
         precipitation,
         city,
         country,
-
         dailyForecast: daily.time.map((date: string, i: number) => ({
           date,
           max: daily.temperature_2m_max[i],
           min: daily.temperature_2m_min[i],
           code: daily.weathercode[i],
+          sunrise: daily.sunrise[i],
+          sunset: daily.sunset[i],
         })),
-
         hourlyByDay: groupedHourly,
-
-        // Return selected units so frontend can render accordingly
         units: {
           temperature: temperature_unit,
           wind: windspeed_unit,
@@ -144,7 +150,14 @@ export async function GET(req: Request) {
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Weather API error:", error.response?.data || error.message);
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Weather API error:",
+        error.response?.data || error.message
+      );
+    } else {
+      console.error("Unexpected error:", error);
+    }
     return NextResponse.json(
       { error: "Failed to fetch weather data" },
       { status: 500 }
