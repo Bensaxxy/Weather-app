@@ -107,6 +107,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
               width={10}
               height={10}
               alt="checkmark"
+              className="w-[10px] h-[10px]"
             />
           )}
         </div>
@@ -125,6 +126,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
               width={10}
               height={10}
               alt="checkmark"
+              className="w-[10px] h-[10px]"
             />
           )}
         </div>
@@ -147,6 +149,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
             width={10}
             height={10}
             alt="checkmark"
+            className="w-[10px] h-[10px]"
           />
         )}
       </div>
@@ -165,6 +168,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
             width={10}
             height={10}
             alt="checkmark"
+            className="w-[10px] h-[10px]"
           />
         )}
       </div>
@@ -185,6 +189,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
             width={10}
             height={10}
             alt="checkmark"
+            className="w-[10px] h-[10px]"
           />
         )}
       </div>
@@ -203,6 +208,7 @@ const UnitsModal: React.FC<UnitsModalProps> = ({ onSelect, selected }) => {
             width={10}
             height={10}
             alt="checkmark"
+            className="w-[10px] h-[10px]"
           />
         )}
       </div>

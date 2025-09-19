@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import UnitsModal, { UnitPreferences } from "@/app/modal/UnitsModal";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface UnitsProps {
   units: UnitPreferences;
@@ -34,12 +35,18 @@ const Units: React.FC<UnitsProps> = ({ units, setUnits }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 z-50">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }} // 👈 plays when unmounted
+          transition={{ duration: 0.25, ease: "easeInOut" }}
+          className="absolute right-0 mt-2 z-50"
+        >
           <UnitsModal
             selected={units}
             onSelect={(newUnits) => setUnits(newUnits)}
           />
-        </div>
+        </motion.div>
       )}
     </div>
   );

@@ -80,6 +80,8 @@ const FourthGrid: React.FC<FourthGridProps> = ({ weatherData, units }) => {
             {isOpen && (
               <div className="absolute right-0 top-8 z-50">
                 <WeeksDayModal
+                  isOpen={isOpen}
+                  onClose={() => setIsOpen(false)}
                   onSelect={(day) => {
                     setSelectedDay(day);
                     setIsOpen(false);
