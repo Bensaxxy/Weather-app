@@ -20,6 +20,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const [input, setInput] = useState("");
   const [recents, setRecents] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]); // 👈 NEW
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,16 +29,24 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [compareList, setCompareList] = useState<string[]>([]);
   const [weatherData, setWeatherData] = useState<Record<string, any>>({});
 
-  // Load recents from localStorage
+  // Load recents + favorites from localStorage
   useEffect(() => {
-    const stored = localStorage.getItem("recentSearches");
-    if (stored) setRecents(JSON.parse(stored));
+    const storedRecents = localStorage.getItem("recentSearches");
+    if (storedRecents) setRecents(JSON.parse(storedRecents));
+
+    const storedFavorites = localStorage.getItem("favoriteLocations");
+    if (storedFavorites) setFavorites(JSON.parse(storedFavorites));
   }, []);
 
   // Save recents
   useEffect(() => {
     localStorage.setItem("recentSearches", JSON.stringify(recents));
   }, [recents]);
+
+  // Save favorites
+  useEffect(() => {
+    localStorage.setItem("favoriteLocations", JSON.stringify(favorites));
+  }, [favorites]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,6 +67,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
     setSuggestions([]);
     setShowSuggestions(false);
+  };
+
+  // ⭐ Add/Remove Favorites
+  const toggleFavorite = (location: string) => {
+    setFavorites(
+      (prev) =>
+        prev.includes(location)
+          ? prev.filter((fav) => fav !== location) // remove
+          : [...prev, location] // add
+    );
   };
 
   const handleAddCompare = async (location: string) => {
@@ -166,15 +185,54 @@ const SearchBar: React.FC<SearchBarProps> = ({
               >
                 {s.name}
               </span>
-              <button
-                onClick={() => handleAddCompare(s.name)}
-                className="text-green-400 text-sm font-semibold hover:underline cursor-pointer"
-              >
-                + Add
-              </button>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleAddCompare(s.name)}
+                  className="text-green-400 text-sm font-semibold hover:underline cursor-pointer"
+                >
+                  + Add
+                </button>
+                <button
+                  onClick={() => toggleFavorite(s.name)}
+                  className={`text-sm font-semibold ${
+                    favorites.includes(s.name)
+                      ? "text-yellow-400"
+                      : "text-neutral-200"
+                  }`}
+                >
+                  ★
+                </button>
+              </div>
             </li>
           ))}
         </ul>
+      )}
+
+      {/* ⭐ Favorites Section */}
+      {favorites.length > 0 && (
+        <div className="mt-6">
+          <h2 className="text-lg font-bold text-yellow-400 mb-2">Favorites</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {favorites.map((fav) => (
+              <div
+                key={fav}
+                className="p-4 bg-neutral-700 rounded-lg shadow text-white relative cursor-pointer"
+                onClick={() => handleSelect(fav)} // 👈 load weather when clicked
+              >
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // prevent triggering handleSelect
+                    toggleFavorite(fav);
+                  }}
+                  className="absolute top-1 right-2 text-red-500 font-bold cursor-pointer"
+                >
+                  ✕
+                </button>
+                <h3 className="font-bold">{fav}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* Compare List Grid */}
@@ -194,7 +252,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
               <h3 className="font-bold mb-2">{location}</h3>
               {weatherData[location] ? (
                 <div>
-                  {/* Temperature */}
                   <p>
                     Temp: {weatherData[location].temp}
                     {units.temperature === "celsius"
@@ -203,11 +260,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                       ? "°F"
                       : "K"}
                   </p>
-
-                  {/* Humidity (always %) */}
                   <p>Humidity: {weatherData[location].humidity}%</p>
-
-                  {/* Wind */}
                   <p>
                     Wind: {weatherData[location].wind}
                     {units.wind === "kmh"
