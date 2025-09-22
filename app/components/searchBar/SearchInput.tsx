@@ -89,7 +89,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       </form>
 
       {showSuggestions && combinedSuggestions.length > 0 && (
-        <ul className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-full md:w-96 lg:w-[450px] bg-neutral-600 shadow-lg rounded-md max-h-60 overflow-y-auto z-10 custom-scrollbar">
+        <ul className="absolute left-1/2 transform -translate-x-1/2 md:-translate-x-[270px] mt-2 w-full md:w-96 lg:w-[450px] bg-neutral-600 shadow-lg rounded-md max-h-60 overflow-y-auto z-10 custom-scrollbar">
           {combinedSuggestions.map((s, i) => (
             <li
               key={i}
