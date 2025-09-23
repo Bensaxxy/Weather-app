@@ -65,7 +65,7 @@ export async function GET(req: Request) {
         params: { lat, lon, format: "json" },
         headers: {
           "User-Agent":
-            "my-weather-app/1.0 (https://github.com/yourusername/yourrepo)",
+            "my-weather-app/1.0 (https://github.com/Bensaxxy/weather-app)",
         },
       }
     );

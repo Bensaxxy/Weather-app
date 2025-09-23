@@ -176,5 +176,5 @@ This project does not have a license. All rights are reserved.
 
 ## Author Info
 
--   **LinkedIn**: [Your LinkedIn Profile](https://linkedin.com/in/your-username)
--   **Twitter**: [@YourTwitterHandle](https://twitter.com/your-username)
+-   **LinkedIn**: [Your LinkedIn Profile](https://www.linkedin.com/in/oluwasegun-benjamin-a80b76252/)
+-   **Twitter**: [@YourTwitterHandle](https://x.com/Bensaxxy11)

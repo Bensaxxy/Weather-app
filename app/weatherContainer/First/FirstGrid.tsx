@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Loading from "./Loading";
+import ApiErrorState from "@/app/components/ApiErrorState";
 
 interface WeatherData {
   temperature: number;
@@ -50,7 +51,7 @@ const FirstGrid: React.FC<FirstGridProps> = ({
   if (error || !weather) {
     return (
       <div className="overflow-hidden rounded-xl h-[240px] flex items-center justify-center bg-neutral-200">
-        <p>{error || "Could not fetch weather data"}</p>
+        <ApiErrorState message={error ?? undefined} />
       </div>
     );
   }
