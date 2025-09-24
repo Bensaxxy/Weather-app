@@ -14,7 +14,7 @@
   --color-blue-700: hsl(248, 70%, 36%);
 }
 body {
-  @apply bg-neutral-900 dark:bg-neutral-950 text-neutral-0;
+  /* @apply text-neutral-900  dark:text-neutral-950; */
   font-family: "DM Sans", sans-serif;
   margin: 0;
   padding: 0;

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Bricolage_Grotesque } from "next/font/google";
 import "./globals.css";
-import AutoThemeProvider from "@/app/components/AutoThemeProvider";
+import { ThemeProvider } from "next-themes";
 
 // DM Sans with multiple weights
 const dmSans = DM_Sans({
@@ -25,16 +25,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${dmSans.variable} ${bricolageGrotesque.variable} antialiased`}
       >
-        <AutoThemeProvider />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

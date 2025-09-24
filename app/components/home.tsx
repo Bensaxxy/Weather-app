@@ -104,7 +104,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="px-3 mb-7 ">
+    <div className="px-3 pb-7 ">
       <Navbar units={units} setUnits={setUnits} />
 
       <h1

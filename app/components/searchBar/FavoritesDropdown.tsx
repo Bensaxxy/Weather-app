@@ -22,7 +22,7 @@ const FavoritesDropdown: React.FC<FavoritesDropdownProps> = ({
     <div className="mt-6 md:px-6 lg:px-16 xl:px-28 2xl:px-40">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex justify-between items-center bg-neutral-700 dark:bg-neutral-300/20 px-4 py-2 rounded-md text-nautral-0 gap-2 focus-within:ring-1 focus-within:ring-neutral-0 font-bold cursor-pointer w-full md:w-32"
+        className="flex justify-between items-center bg-neutral-700  px-4 py-2 rounded-md text-nautral-0 gap-2 focus-within:ring-1 focus-within:ring-neutral-0 font-bold cursor-pointer w-full md:w-32"
       >
         Favorites
         <span>
