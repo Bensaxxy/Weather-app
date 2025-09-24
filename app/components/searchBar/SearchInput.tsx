@@ -61,6 +61,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
     e.preventDefault();
     if (input.trim()) {
       onSelect(input.trim());
+      setInput("");
+      setShowSuggestions(false); // hide suggestions
     }
   };
 
@@ -92,6 +94,11 @@ const SearchInput: React.FC<SearchInputProps> = ({
         <ul className="absolute left-1/2 transform -translate-x-1/2 md:-translate-x-[270px] mt-2 w-full md:w-96 lg:w-[450px] bg-neutral-600 shadow-lg rounded-md max-h-60 overflow-y-auto z-10 custom-scrollbar">
           {combinedSuggestions.map((s, i) => (
             <li
+              onClick={() => {
+                onSelect(s.name);
+                setInput(""); // clear the input field
+                setShowSuggestions(false); // hide dropdown
+              }}
               key={i}
               className="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-neutral-300/20"
             >

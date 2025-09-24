@@ -45,14 +45,23 @@ const SearchBar: React.FC<SearchBarProps> = ({
     localStorage.setItem("favoriteLocations", JSON.stringify(favorites));
   }, [favorites]);
 
-  const handleSelect = (location: string) => {
-    onSearch(location);
-    setInput(location);
+  const handleSelect = async (location: string) => {
+    try {
+      setLoading(true);
+      onSearch(location);
+      setInput(location);
 
-    setRecents((prev) => {
-      const updated = [location, ...prev.filter((r) => r !== location)];
-      return updated.slice(0, 4);
-    });
+      setRecents((prev) => {
+        const updated = [location, ...prev.filter((r) => r !== location)];
+        return updated.slice(0, 4);
+      });
+
+      // Fetch weather for the main search (optional)
+      const data = await fetchWeather(location);
+      setWeatherData((prev) => ({ ...prev, [location]: data }));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleFavorite = (location: string) => {
@@ -64,13 +73,16 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleAddCompare = async (location: string) => {
-    setLoading(true);
-    if (!compareList.includes(location)) {
-      setCompareList((prev) => [...prev, location]);
-      const data = await fetchWeather(location);
-      setWeatherData((prev) => ({ ...prev, [location]: data }));
+    try {
+      setLoading(true);
+      if (!compareList.includes(location)) {
+        setCompareList((prev) => [...prev, location]);
+        const data = await fetchWeather(location);
+        setWeatherData((prev) => ({ ...prev, [location]: data }));
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleRemoveCompare = (location: string) => {
@@ -90,11 +102,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
         toggleFavorite={toggleFavorite}
         favorites={favorites}
         handleAddCompare={handleAddCompare}
-        loading={loading}
+        loading={loading} // still useful if SearchInput wants to disable input
       />
 
+      {/* Unified Loader */}
       {loading && (
-        <div className="mt-2 flex justify-center absolute left-1/2 transform -translate-x-1/2 w-full md:w-96 lg:w-[450px]">
+        <div className="mt-3 flex justify-center absolute left-1/2 transform -translate-x-1/2 w-full md:w-96 lg:w-[450px] z-50">
           <ProgressLoading />
         </div>
       )}
