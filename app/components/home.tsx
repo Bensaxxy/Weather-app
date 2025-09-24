@@ -108,7 +108,7 @@ const HomePage = () => {
       <Navbar units={units} setUnits={setUnits} />
 
       <h1
-        className=" text-6xl md:text-5xl xl:text-6xl text-center my-10 md:my-14"
+        className=" text-6xl md:text-5xl xl:text-6xl text-center my-10 md:my-14 dark:text-neutral-0"
         style={{ fontFamily: "var(--font-bricolage-grotesque)" }}
       >
         How's the sky looking today?
