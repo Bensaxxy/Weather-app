@@ -44,6 +44,9 @@ const AllGrid: React.FC<AllGridProps> = ({ units, weatherData }) => {
               humidity: weatherData?.humidity ?? null,
               windspeed: weatherData?.windspeed ?? 0,
               precipitation: weatherData?.precipitation ?? null,
+              uvIndex: (weatherData as any)?.uvIndex ?? null,
+              visibility: (weatherData as any)?.visibility ?? null,
+              pressure: (weatherData as any)?.pressure ?? null,
             }}
             units={{
               ...units,

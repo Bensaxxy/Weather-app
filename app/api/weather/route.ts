@@ -45,7 +45,7 @@ export async function GET(req: Request) {
           longitude: lon,
           current_weather: true,
           hourly:
-            "apparent_temperature,relativehumidity_2m,precipitation,weathercode",
+            "apparent_temperature,relativehumidity_2m,precipitation,weathercode,uv_index,visibility,surface_pressure",
           daily:
             "temperature_2m_max,temperature_2m_min,weathercode,sunrise,sunset",
           timezone: "auto",
@@ -105,6 +105,21 @@ export async function GET(req: Request) {
         ? weatherRes.data.hourly.precipitation[currentHourIndex]
         : null;
 
+    const uvIndex =
+      currentHourIndex !== -1
+        ? weatherRes.data.hourly.uv_index[currentHourIndex]
+        : null;
+
+    const visibility =
+      currentHourIndex !== -1
+        ? weatherRes.data.hourly.visibility[currentHourIndex]
+        : null;
+
+    const pressure =
+      currentHourIndex !== -1
+        ? weatherRes.data.hourly.surface_pressure[currentHourIndex]
+        : null;
+
     // Group hourly forecast by day
     const hourly = weatherRes.data.hourly;
     const groupedHourly: Record<string, any[]> = {};
@@ -130,6 +145,9 @@ export async function GET(req: Request) {
         feelsLike,
         humidity,
         precipitation,
+        uvIndex,
+        visibility,
+        pressure,
         city,
         country,
         dailyForecast: daily.time.map((date: string, i: number) => ({

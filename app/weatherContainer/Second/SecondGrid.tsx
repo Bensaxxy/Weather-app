@@ -7,6 +7,9 @@ interface WeatherData {
   humidity: number | null;
   windspeed: number;
   precipitation: number | null;
+  uvIndex: number | null;
+  visibility: number | null;
+  pressure: number | null;
 }
 
 interface SecondGridProps {
@@ -63,6 +66,33 @@ const SecondGrid: React.FC<SecondGridProps> = ({ weather, units }) => {
         </p>
         <h1 className="mt-4 text-2xl font-[300]">
           {weather.precipitation?.toFixed(2) ?? 0} {units.precipitation}
+        </h1>
+      </div>
+      {/* UV Index */}
+      <div className="bg-neutral-700 dark:bg-neutral-950 rounded-lg p-4 outline outline-neutral-500/60">
+        <p className="font-[300] text-sm md:text-md text-neutral-200">
+          UV Index
+        </p>
+        <h1 className="mt-4 text-2xl font-[300]">{weather.uvIndex ?? "--"}</h1>
+      </div>
+
+      {/* Visibility */}
+      <div className="bg-neutral-700 dark:bg-neutral-950 rounded-lg p-4 outline outline-neutral-500/60">
+        <p className="font-[300] text-sm md:text-md text-neutral-200">
+          Visibility
+        </p>
+        <h1 className="mt-4 text-2xl font-[300]">
+          {weather.visibility?.toFixed(0) ?? "--"} m
+        </h1>
+      </div>
+
+      {/* Pressure */}
+      <div className="bg-neutral-700 dark:bg-neutral-950 rounded-lg p-4 outline outline-neutral-500/60">
+        <p className="font-[300] text-sm md:text-md text-neutral-200">
+          Air Pressure
+        </p>
+        <h1 className="mt-4 text-2xl font-[300]">
+          {weather.pressure?.toFixed(0) ?? "--"} hPa
         </h1>
       </div>
     </div>
