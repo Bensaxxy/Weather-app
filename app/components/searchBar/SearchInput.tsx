@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import VoiceSearch from "../VoiceSearch";
 
 interface SearchInputProps {
   input: string;
@@ -24,6 +25,42 @@ const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [listening, setListening] = useState(false);
+
+  const recognitionRef = useRef<any>(null);
+
+  // Setup SpeechRecognition on mount
+  useEffect(() => {
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        onSelect(transcript);
+      };
+
+      recognition.onend = () => setListening(false);
+
+      recognitionRef.current = recognition;
+    }
+  }, [onSelect, setInput]);
+
+  const startListening = () => {
+    if (recognitionRef.current) {
+      setListening(true);
+      recognitionRef.current.start();
+    } else {
+      alert("Your browser does not support voice search.");
+    }
+  };
 
   const fetchSuggestions = async (query: string) => {
     try {
@@ -62,7 +99,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
     if (input.trim()) {
       onSelect(input.trim());
       setInput("");
-      setShowSuggestions(false); // hide suggestions
+      setShowSuggestions(false);
     }
   };
 
@@ -81,6 +118,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
             placeholder="Search for a place..."
             className="border-none outline-none bg-transparent w-full placeholder:font-[500] placeholder:text-neutral-200/50"
           />
+          {/* Mic button with animation */}
+          <VoiceSearch setInput={setInput} onSelect={onSelect} />
         </div>
         <button
           type="submit"
@@ -96,8 +135,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
             <li
               onClick={() => {
                 onSelect(s.name);
-                setInput(""); // clear the input field
-                setShowSuggestions(false); // hide dropdown
+                setInput("");
+                setShowSuggestions(false);
               }}
               key={i}
               className="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-neutral-300/20"
