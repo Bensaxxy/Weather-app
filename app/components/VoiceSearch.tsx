@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Mic, MicOff } from "lucide-react";
+import { Mic, MicOff, AlertCircle } from "lucide-react";
 
 interface VoiceSearchProps {
   setInput: (value: string) => void;
@@ -9,6 +9,7 @@ interface VoiceSearchProps {
 
 const VoiceSearch: React.FC<VoiceSearchProps> = ({ setInput, onSelect }) => {
   const [listening, setListening] = useState(false);
+  const [supported, setSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
@@ -20,10 +21,12 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({ setInput, onSelect }) => {
       const recognition = new SpeechRecognition();
       recognition.lang = "en-US";
       recognition.interimResults = false;
+      recognition.continuous = true; // keep listening until stopped
       recognition.maxAlternatives = 1;
 
       recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
+        const transcript =
+          event.results[event.results.length - 1][0].transcript;
         setInput(transcript);
         onSelect(transcript);
       };
@@ -34,13 +37,13 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({ setInput, onSelect }) => {
 
       recognitionRef.current = recognition;
     } else {
-      console.warn("SpeechRecognition is not supported in this browser.");
+      setSupported(false); // mark unsupported browsers
     }
   }, [setInput, onSelect]);
 
   const toggleListening = () => {
     if (!recognitionRef.current) {
-      alert("Your browser does not support voice search.");
+      alert("Voice search is not supported in this browser.");
       return;
     }
 
@@ -48,16 +51,29 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({ setInput, onSelect }) => {
       recognitionRef.current.stop();
       setListening(false);
     } else {
-      setListening(true);
       recognitionRef.current.start();
+      setListening(true);
     }
   };
+
+  if (!supported) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="ml-2 p-2 h-10 rounded-full bg-gray-400 cursor-not-allowed flex items-center justify-center"
+        title="Voice search not supported in this browser"
+      >
+        <AlertCircle size={20} className="text-white" />
+      </button>
+    );
+  }
 
   return (
     <button
       type="button"
       onClick={toggleListening}
-      className={`ml-2 relative p-2 h-10 rounded-full transition ${
+      className={`ml-2 relative p-2 h-10 rounded-full transition cursor-pointer ${
         listening ? "bg-red-500" : "bg-blue-500"
       }`}
       title="Voice Search"
