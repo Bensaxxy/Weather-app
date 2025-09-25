@@ -21,17 +21,6 @@ export const metadata: Metadata = {
   title: "Weather App",
   description:
     "A simple weather application built with Next.js and Tailwind CSS",
-  manifest: "/manifest.json", // 🔑 add manifest here
-  themeColor: "#2563eb", // 🔑 set theme color for mobile browser UI
-  icons: {
-    icon: [
-      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512x512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [
-      { url: "/icons/icon-192x192.png", sizes: "192x192", type: "image/png" },
-    ],
-  },
 };
 
 export default function RootLayout({
@@ -41,15 +30,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* 🔑 Extra meta tags for PWA + iOS */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta
-          name="apple-mobile-web-app-status-bar-style"
-          content="black-translucent"
-        />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-      </head>
       <body
         className={`${dmSans.variable} ${bricolageGrotesque.variable} antialiased`}
       >
