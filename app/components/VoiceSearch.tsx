@@ -73,12 +73,12 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({ setInput, onSelect }) => {
     <button
       type="button"
       onClick={toggleListening}
-      className={`ml-2 relative p-2 h-10 rounded-full transition cursor-pointer ${
+      className={`ml-2 relative py-1 px-2 h-9 rounded-full transition cursor-pointer ${
         listening ? "bg-red-500" : "bg-blue-500"
       }`}
       title="Voice Search"
     >
-      {listening ? <MicOff size={20} /> : <Mic size={20} />}
+      {listening ? <MicOff size={18} /> : <Mic size={18} />}
       {listening && (
         <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-red-500 animate-ping"></span>
       )}
